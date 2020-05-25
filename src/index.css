@@ -1,0 +1,14 @@
+/**
+ * Styling for the login / sign up page.
+ */
+body {
+	text-align: center;
+}
+
+input {
+	margin-bottom: 5px;
+}
+
+#passwordRepeat {
+	visibility: hidden;
+}
