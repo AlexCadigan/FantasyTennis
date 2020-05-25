@@ -18,7 +18,7 @@ for ($rank = 1; $rank <= $MAXRANK; $rank += 100) {
 		}
 
 		// If the player does not already exist in the DB, add them
-		$result = mysqli_query($connection, "SELECT 1 FROM Players WHERE Name='$player'");
+		$result = mysqli_query($connection, "SELECT 1 FROM Players WHERE Name='" . $player . "'");
 		if (!($row = mysqli_fetch_assoc($result))) {
 			mysqli_query($connection, "INSERT INTO Players (Name, Price, CurrentPoints, PreviousPoints, Previous2Points, YTDPoints) VALUES ('" . $player . "', 1, 0, 0, 0, 0)");
 		}
