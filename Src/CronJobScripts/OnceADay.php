@@ -3,7 +3,7 @@
  * Scripts to be executed once a day via a cron job.
  */
 // Dependencies
-require_once("../Config/DBConnection.php");
+require_once("../Config/Config.php");
 require_once("Lib/simple_html_dom.php");
 
 // Scripts
