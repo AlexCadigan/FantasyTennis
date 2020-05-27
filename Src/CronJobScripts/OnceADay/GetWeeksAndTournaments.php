@@ -5,6 +5,7 @@
  */
 require_once("../../Config/Config.php");
 require_once("../Lib/simple_html_dom.php");
+require_once("../Lib/HelpfulFunctions.php");
 
 $currentWeek = mysqli_fetch_assoc(mysqli_query($connection, "SELECT Week FROM Weeks WHERE IsCurrent=1 AND YEAR(StartDate)=" . date("Y")))["Week"];
 
@@ -24,6 +25,7 @@ else {
 	}
 }
 $firstWeek = true;
+$previousDate = null;
 
 // Scrape tournament and date info
 $htmlScraper = file_get_html("https://www.atptour.com/en/scores/results-archive?year=" . date("Y"));
@@ -32,13 +34,18 @@ $dates = $htmlScraper->find(".tourney-dates");
 
 // Loop over tournaments and dates
 for ($i = 0; $i < count($tournaments); $i ++) {
-	$tournaments[$i] = str_replace("'", "''", trim(html_entity_decode($tournaments[$i]->plaintext)));
+	$tournaments[$i] = str_replace("'", "''", trim(str_replace("(Suspended)", "", html_entity_decode($tournaments[$i]->plaintext))));
 	$dates[$i] = str_replace(".", "-", trim(html_entity_decode($dates[$i]->plaintext)));
 	$unixDate = strtotime($dates[$i]);
 
-	// This is a new year and the current week hasn't been set yet
-	if ($i === 0 && $startDate == null) {
-		mysqli_query($connection, "INSERT INTO Weeks (Week, StartDate, IsCurrent) VALUES (" . $currentWeek . ", " . $dates[$i] . ", 1");
+	// If the current tournament should be ignored (it's too hard to get the results)
+	if (ignoreTournament($tournaments[$i])) {
+		continue;
+	}
+
+	// This is the start of a new year and the first tournament set the very first week
+	if ($previousDate == null && $startDate == null) {
+		mysqli_query($connection, "INSERT INTO Weeks (Week, StartDate, IsCurrent) VALUES (" . $currentWeek . ", '" . $dates[$i] . "', 1)");
 	}
 
 	// This is the start of a new year or this tournament is 2 weeks in the future
@@ -50,20 +57,27 @@ for ($i = 0; $i < count($tournaments); $i ++) {
 		$firstWeek = false;
 
 		// This tournament signifies the start of a new week
-		if ($i !== 0 && $unixDate - $previousDate / 60 / 60 / 24 > 3) {
+		if ($previousDate != null && (($unixDate - $previousDate) / 60 / 60 / 24) > 3) {
 			$currentWeek ++;
 			verifyOrAddWeek($connection, $currentWeek, $dates[$i]);
 		}
 
-		// Verify or add tournament
-
+		// Verify or add this tournament to the database
+		$row = mysqli_fetch_assoc(mysqli_query($connection, "SELECT * FROM Tournaments WHERE Name='" . $tournaments[$i] . "' AND Year=" . date("Y")));
+		if ($row == null) {
+			mysqli_query($connection, "INSERT INTO Tournaments (Name, Week, Year) VALUES ('" . $tournaments[$i] . "', " . $currentWeek . ", " . date("Y") . ")");
+		}
+		else {
+			if ($currentWeek !== $row["Week"]) {
+				mysqli_query($connection, "UPDATE Tournaments SET Week=" . $currentWeek . " WHERE Name='" . $tournaments[$i] . "' AND Year=" . date("Y"));
+			}
+		}
 	}
 
-	// Set week 1 to current week
 	$previousDate = $unixDate;
 }
 
-// If $startDate is not null then delete unused tournaments or weeks
+// If $startDate is not null then delete unused tournaments or weeks.  Use the list of scrapped tournaments and the last week we left off on.
 
 /**
  * Verifies that the current week exists and has a correct start date or adds the week to the database if it doesn't exist.
@@ -75,20 +89,16 @@ for ($i = 0; $i < count($tournaments); $i ++) {
  * @return Void.
  */
 function verifyOrAddWeek($connection, $week, $startDate) {
-	echo "Inside verifyOrAddWeek <br>";
-
 	$row = mysqli_fetch_assoc(mysqli_query($connection, "SELECT * FROM Weeks WHERE Week=" . $week));
 	
 	// This week is not in the database
 	if ($row == null) {
-		echo "Inside if <br>";
 		mysqli_query($connection, "INSERT INTO Weeks (Week, StartDate, IsCurrent) VALUES (" . $week . ", '" . $startDate . "', 0)");
 	}
 	else {
-		echo "Inside else <br>";
 		// The week has an incorrect start date that needs updating
 		if ($startDate !== $row["StartDate"]) {
-			mysqli_query($connection, "UPDATE Weeks SET StartDate='" . $startDate . "' WHERE Week=" . $week);
+			mysqli_query($connection, "UPDATE Weeks SET StartDate='" . $startDate . "' WHERE Week=" . $week . " AND YEAR(StartDate)=" . date("Y"));
 		}
 	}
 }
