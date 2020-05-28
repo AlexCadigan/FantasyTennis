@@ -7,17 +7,18 @@ require_once("../../Config/Config.php");
 require_once("../Lib/simple_html_dom.php");
 require_once("../Lib/HelpfulFunctions.php");
 
-$currentWeek = mysqli_fetch_assoc(mysqli_query($connection, "SELECT Week FROM Weeks WHERE IsCurrent=1 AND YEAR(StartDate)=" . date("Y")))["Week"];
+$currentYear = date("Y");
+$currentWeek = $databaseCurrentWeek = mysqli_fetch_assoc(mysqli_query($connection, "SELECT Week FROM Weeks WHERE IsCurrent=1 AND YEAR(StartDate)=" . $currentYear))["Week"];
 
 // Start of a new year and current week hasn't been set yet
 if ($currentWeek == null) {
-	$currentWeek = 1;
+	$currentWeek = $databaseCurrentWeek = 1;
 	$startDate = null;
 }
 // Look at tournaments 2 weeks in the future (so we don't mess up this and next weeks tournaments)
 else {
 	$currentWeek += 2;
-	$startDate = strtotime(mysqli_fetch_assoc(mysqli_query($connection, "SELECT StartDate FROM Weeks WHERE Week=" . $currentWeek . " AND YEAR(StartDate)=" . date("Y")))["StartDate"]);
+	$startDate = strtotime(mysqli_fetch_assoc(mysqli_query($connection, "SELECT StartDate FROM Weeks WHERE Week=" . $currentWeek . " AND YEAR(StartDate)=" . $currentYear))["StartDate"]);
 	
 	// There are no tournaments 2 weeks away because we're at the end of the year
 	if ($startDate == null) {
@@ -28,13 +29,13 @@ $firstWeek = true;
 $previousDate = null;
 
 // Scrape tournament and date info
-$htmlScraper = file_get_html("https://www.atptour.com/en/scores/results-archive?year=" . date("Y"));
+$htmlScraper = file_get_html("https://www.atptour.com/en/scores/results-archive?year=" . $currentYear);
 $tournaments = $htmlScraper->find(".tourney-title");
 $dates = $htmlScraper->find(".tourney-dates");
 
 // Loop over tournaments and dates
 for ($i = 0; $i < count($tournaments); $i ++) {
-	$tournaments[$i] = str_replace("'", "''", trim(str_replace("(Suspended)", "", html_entity_decode($tournaments[$i]->plaintext))));
+	$tournaments[$i] = str_replace("'", "''", trim(html_entity_decode($tournaments[$i]->plaintext)));
 	$dates[$i] = str_replace(".", "-", trim(html_entity_decode($dates[$i]->plaintext)));
 	$unixDate = strtotime($dates[$i]);
 
@@ -44,7 +45,7 @@ for ($i = 0; $i < count($tournaments); $i ++) {
 	}
 
 	// This is the start of a new year and the first tournament set the very first week
-	if ($previousDate == null && $startDate == null) {
+	if ($startDate == null && $previousDate == null) {
 		mysqli_query($connection, "INSERT INTO Weeks (Week, StartDate, IsCurrent) VALUES (" . $currentWeek . ", '" . $dates[$i] . "', 1)");
 	}
 
@@ -52,30 +53,46 @@ for ($i = 0; $i < count($tournaments); $i ++) {
 	if ($startDate == null || $startDate <= $unixDate) {
 		// This is not a new year and is the first week we need to verify
 		if ($firstWeek && $startDate != null) {
-			verifyOrAddWeek($connection, $currentWeek, $dates[$i]);
+			verifyOrAddWeek($connection, $currentYear, $currentWeek, $dates[$i]);
 		}
 		$firstWeek = false;
 
 		// This tournament signifies the start of a new week
 		if ($previousDate != null && (($unixDate - $previousDate) / 60 / 60 / 24) > 3) {
 			$currentWeek ++;
-			verifyOrAddWeek($connection, $currentWeek, $dates[$i]);
+			verifyOrAddWeek($connection, $currentYear, $currentWeek, $dates[$i]);
 		}
 
 		// Verify or add this tournament to the database
-		$row = mysqli_fetch_assoc(mysqli_query($connection, "SELECT * FROM Tournaments WHERE Name='" . $tournaments[$i] . "' AND Year=" . date("Y")));
+		$row = mysqli_fetch_assoc(mysqli_query($connection, "SELECT Week FROM Tournaments WHERE Name='" . $tournaments[$i] . "' AND Year=" . $currentYear));
 		if ($row == null) {
-			mysqli_query($connection, "INSERT INTO Tournaments (Name, Week, Year) VALUES ('" . $tournaments[$i] . "', " . $currentWeek . ", " . date("Y") . ")");
+			mysqli_query($connection, "INSERT INTO Tournaments (Name, Week, Year) VALUES ('" . $tournaments[$i] . "', " . $currentWeek . ", " . $currentYear . ")");
 		}
 		else {
 			if ($currentWeek !== $row["Week"]) {
-				mysqli_query($connection, "UPDATE Tournaments SET Week=" . $currentWeek . " WHERE Name='" . $tournaments[$i] . "' AND Year=" . date("Y"));
+				mysqli_query($connection, "UPDATE Tournaments SET Week=" . $currentWeek . " WHERE Name='" . $tournaments[$i] . "' AND Year=" . $currentYear);
 			}
 		}
 	}
 
 	$previousDate = $unixDate;
 }
+
+// Remove weeks that no longer exist or are more than 2 years old
+// $databaseWeeks = mysqli_query($connection, "SELECT Week, YEAR(StartDate) FROM Weeks");
+// while ($row = mysqli_fetch_assoc($databaseWeeks) != null) {
+// 	if (($row["Week"] > $currentWeek && $row["YEAR(StartDate)"] === $currentYear) || $row["YEAR(StartDate)"] < ($currentYear - 1)) {
+// 		mysqli_query($connection, "DELETE FROM Weeks WHERE Week=" . $row["Week"] . " AND YEAR(StartDate)=" . $currentYear);
+// 	}
+// }
+
+// Remove tournaments that no longer exist or are more than 2 years old
+// $databaseTournaments = mysqli_query($connection, "SELECT Name, Week, Year FROM Tournaments");
+// for ($i = 0; $i < count($databaseTournaments); $i ++) {
+// 	$row = mysqli_fetch_assoc($databaseTournaments[$i]);
+// 	// Tournament name doesn't match, week is future, year is current or year is 2 old
+// 	if (!in_array($row["Name"], $tournaments) && $row["Week"])
+// }
 
 // If $startDate is not null then delete unused tournaments or weeks.  Use the list of scrapped tournaments and the last week we left off on.
 
@@ -88,17 +105,23 @@ for ($i = 0; $i < count($tournaments); $i ++) {
  *
  * @return Void.
  */
-function verifyOrAddWeek($connection, $week, $startDate) {
-	$row = mysqli_fetch_assoc(mysqli_query($connection, "SELECT * FROM Weeks WHERE Week=" . $week));
+function verifyOrAddWeek($connection, $currentYear, $week, $startDate) {
+	echo "Week: " . $week . "<br>";
+
+	$row = mysqli_fetch_assoc(mysqli_query($connection, "SELECT StartDate FROM Weeks WHERE Week=" . $week . " AND YEAR(StartDate)=" . $currentYear));
 	
 	// This week is not in the database
 	if ($row == null) {
+		echo "Week is not in database.<br>";
+
 		mysqli_query($connection, "INSERT INTO Weeks (Week, StartDate, IsCurrent) VALUES (" . $week . ", '" . $startDate . "', 0)");
 	}
 	else {
+		echo "Week is in database.<br>";
+
 		// The week has an incorrect start date that needs updating
 		if ($startDate !== $row["StartDate"]) {
-			mysqli_query($connection, "UPDATE Weeks SET StartDate='" . $startDate . "' WHERE Week=" . $week . " AND YEAR(StartDate)=" . date("Y"));
+			mysqli_query($connection, "UPDATE Weeks SET StartDate='" . $startDate . "' WHERE Week=" . $week . " AND YEAR(StartDate)=" . $currentYear);
 		}
 	}
 }
