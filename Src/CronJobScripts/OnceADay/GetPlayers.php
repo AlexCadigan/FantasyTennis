@@ -2,10 +2,10 @@
 /**
  * Looks through ATP ranking and adds all the new players to the DB.
  */
-$MAXRANK = 201;
+$maxRank = 201;
 
 // Gets top 200 players
-for ($rank = 1; $rank <= $MAXRANK; $rank += 100) {
+for ($rank = 1; $rank <= $maxRank; $rank += 100) {
 	$htmlScraper = file_get_html("https://www.atptour.com/en/rankings/singles?rankRange=" . $rank . "-" . ($rank + 99));
 	$players = $htmlScraper->find('td.player-cell');
 

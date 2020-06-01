@@ -4,7 +4,8 @@
  */
 
 /**
- * Determines if we should ignore the given tournament.  Ignore tournaments that are too difficult to get results from (because of the format they're stored in).  These tournaments will hopefully be supported in the future.
+ * Determines if we should ignore the given tournament.  Ignore tournaments that are too difficult to get results from 
+ * (because of the format they're stored in).  These tournaments will hopefully be supported in the future.
  *
  * @param $tournament - The given tournament.
  *
