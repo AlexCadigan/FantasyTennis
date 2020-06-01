@@ -7,7 +7,7 @@
 	* **OnceADay** - Scripts run once a day.
 
 ## Database Structure
-Structure of the SQL database's tables.
+Structure of the SQL database tables.
 
 ### Players
 | Name          | Price               | CurrentPoints                  |
