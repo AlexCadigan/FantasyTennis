@@ -7,7 +7,7 @@ $maxRank = 201;
 // Gets top 200 players
 for ($rank = 1; $rank <= $maxRank; $rank += 100) {
 	$htmlScraper = file_get_html("https://www.atptour.com/en/rankings/singles?rankRange=" . $rank . "-" . ($rank + 99));
-	$players = $htmlScraper->find('td.player-cell');
+	$players = $htmlScraper->find("td.player-cell");
 
 	foreach($players as $player) {
 		// Revert HTML encoded characters to their ASCII counterparts
