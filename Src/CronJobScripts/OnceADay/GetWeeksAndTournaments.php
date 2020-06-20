@@ -36,8 +36,12 @@ function setupThisYearData($connection, $year) {
 			$currentWeek --;
 		}
 
-		// We don't ever want $startDate to be null here
-		$startDate = $startDate ?: strtotime(date("Y-m-d"));
+		// Something is very wrong if start date is null here
+		if (!$startDate) {
+			echo("No start date found for the current week.");
+			return;
+		}
+
 		getData($connection, $year, $currentWeek, $startDate);
 	}
 
@@ -94,6 +98,7 @@ function getData($connection, $year, $currentWeek, $startDate) {
 
 	// Tournament and tournament date counts should match
 	if ($numTournaments !== count($dates)) {
+		echo("Number of tournaments does not match number of dates.");
 		return;
 	}
 
