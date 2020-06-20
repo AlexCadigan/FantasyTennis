@@ -3,10 +3,6 @@
  * Calculates how many "weeks" there are this season and the next.  Gets information about the tournaments being
  * played this year and the next.  Stores weeks and tournaments information in the DB.
  */
-require_once("../../Config/Config.php");
-require_once("../Lib/simple_html_dom.php");
-require_once("../Lib/HelpfulFunctions.php");
-
 $currentYear = date("Y");
 setupThisYearData($connection, $currentYear);
 
@@ -33,19 +29,16 @@ function setupThisYearData($connection, $year) {
 	}
 	else {
 		// Start with tournaments 2 weeks in the future (so we don't mess up this and next week's data)
-		$currentWeek += 2;
-		$startDate = strtotime(mysqli_fetch_assoc(mysqli_query($connection, "SELECT StartDate FROM Weeks WHERE Week=" . $currentWeek . " AND YEAR(StartDate)=" . $year))["StartDate"]);
+		$originalWeek = $currentWeek += 2;
 
-		// If start date is null it means there are no tournaments 2 weeks in the future
+		// Loop backwards if necessary to find a valid start date
+		while (!($startDate = strtotime(mysqli_fetch_assoc(mysqli_query($connection, "SELECT StartDate FROM Weeks WHERE Week=" . $currentWeek . " AND YEAR(StartDate)=" . $year))["StartDate"])) && $currentWeek >= $originalWeek - 2) {
+			$currentWeek --;
+		}
 
-
-		// Not true, it could mean there's no data for the future because the tournaments weren't added yet.  They could be added later.
-
-		// Calculate the previous start date.  If that's null, calculate the current week's start date.  This is in case there isn't data yet for future weeks.
-
-		//if ($startDate != null) {
-			getData($connection, $year, $currentWeek, $startDate);
-		//}
+		// We don't ever want $startDate to be null here
+		$startDate = $startDate ?: strtotime(date("Y-m-d"));
+		getData($connection, $year, $currentWeek, $startDate);
 	}
 
 	setupNextYearData($connection, $year + 1, $databaseCurrentWeek);
@@ -99,7 +92,7 @@ function getData($connection, $year, $currentWeek, $startDate) {
 	$numTournaments = count($tournaments);
 	$dates = $htmlScraper->find(".tourney-dates");
 
-	// Tournament and tournament dates counts should match
+	// Tournament and tournament date counts should match
 	if ($numTournaments !== count($dates)) {
 		return;
 	}
@@ -111,8 +104,8 @@ function getData($connection, $year, $currentWeek, $startDate) {
 	// Loop over tournaments and dates
 	for ($i = 0; $i < $numTournaments; $i ++) {
 		// Format scrapped data
-		$tournaments[$i] = str_replace("'", "''", trim(html_entity_decode($tournaments[$i]->plaintext)));
-		$dates[$i] = str_replace(".", "-", trim(html_entity_decode($dates[$i]->plaintext)));
+		$tournaments[$i] = str_replace("'", "''", trim(html_entity_decode($tournaments[$i]->plaintext, ENT_QUOTES, "UTF-8")));
+		$dates[$i] = str_replace(".", "-", trim(html_entity_decode($dates[$i]->plaintext, ENT_QUOTES, "UTF-8")));
 		$unixDate = strtotime($dates[$i]);
 
 		// If the current tournament should be ignored (it's too hard to get the results)
@@ -140,7 +133,7 @@ function getData($connection, $year, $currentWeek, $startDate) {
 			$firstWeek = false;
 
 			// Verify or add this tournament to the database
-			if (!$row = mysqli_fetch_assoc(mysqli_query($connection, "SELECT Week FROM Tournaments WHERE Name='" . $tournaments[$i] . "' AND Year=" . $year));) {
+			if (!$row = mysqli_fetch_assoc(mysqli_query($connection, "SELECT Week FROM Tournaments WHERE Name='" . $tournaments[$i] . "' AND Year=" . $year))) {
 				mysqli_query($connection, "INSERT INTO Tournaments (Name, Week, Year) VALUES ('" . $tournaments[$i] . "', " . $currentWeek . ", " . $year . ")");
 			}
 			else {

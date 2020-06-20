@@ -11,7 +11,7 @@ for ($rank = 1; $rank <= $maxRank; $rank += 100) {
 
 	foreach($players as $player) {
 		// Revert HTML encoded characters to their ASCII counterparts
-		$player = str_replace("'", "''", trim(html_entity_decode($player->plaintext)));
+		$player = str_replace("'", "''", trim(html_entity_decode($player->plaintext, ENT_QUOTES, "UTF-8")));
 
 		if ($player == null) {
 			continue;
