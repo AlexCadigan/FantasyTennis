@@ -41,12 +41,12 @@ function verifyOrAddPlayer($player) {
 	$result = sql_selectPlayers($player);
 
 	if (mysqli_num_rows($result) > 1) {
-		throw new Exception("Duplicate entries found when selecting players from DB.");
+		throw new Exception("Duplicate entries found when selecting player '" . $player . "'.");
 	}
 
 	if (!($row = mysqli_fetch_assoc($result))) {
-		if (!sql_insertPlayers($player)) {
-			throw new Exception("Error inserting a new player into the DB.");
+		if (!sql_insertPlayer($player)) {
+			throw new Exception("Error inserting player '" . $player . "' into the DB.");
 		}
 	}
 }
