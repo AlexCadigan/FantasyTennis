@@ -1,8 +1,36 @@
 <?php
 /**
+ * Functions to scrape and store the week and tournament data.
+ */
+
+/**
+ *
+ */
+function scrapeWeeksAndTournaments() {
+	$currentYear = date("Y");
+
+	if (!$currentYear) {
+		throw new Exception("Could not get current year.");
+	}
+
+	// Get the current week
+	$result = sql_selectWeeks($currentYear, 1);
+
+	if (mysqli_num_rows($result) > 1) {
+		throw new Exception("Multiple current weeks returned for year '" . $currentYear . "'.");
+	}
+
+	$currentWeek = $originalCurrentWeek = mysqli_fetch_assoc($result)["Week"];
+}
+
+
+/**
  * Calculates how many "weeks" there are this season and the next.  Gets information about the tournaments being
  * played this year and the next.  Stores weeks and tournaments information in the DB.
  */
+
+
+
 $currentYear = date("Y");
 setupThisYearData($connection, $currentYear);
 
@@ -114,6 +142,9 @@ function getData($connection, $year, $currentWeek, $startDate) {
 		// If there is no data for this year yet and this is the first tournament encountered
 		if (!$startDate && !$previousDate) {
 			// Create the first week and set it to the current week
+
+
+			// If this is scraping for next year, insert a week 0.  or maybe do this for the current year too if there's no start date.
 			mysqli_query($connection, "INSERT INTO Weeks (Week, StartDate, IsCurrent) VALUES (" . $currentWeek . ", '" . $dates[$i] . "', 1)");
 		}
 

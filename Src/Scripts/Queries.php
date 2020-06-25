@@ -18,7 +18,17 @@ function sql_selectPlayers($name) {
  * @param  $name - Player name.
  * @return True if the query was successful, false otherwise.
  */
-function sql_insertPlayers($name) {
+function sql_insertPlayer($name) {
 	return mysqli_query($GLOBALS["dbConnection"], "INSERT INTO Players VALUES ('" . $name . "', 1, 0, 0, 0, 0)");
+}
+
+/**
+ * Selects data from the Weeks table.
+ * @param  $year      - Year week is associated with.
+ * @param  $isCurrent - 1 if only current weeks should be selected, null if all weeks should be selected.
+ * @return Array of SQL data from the Weeks table.
+ */
+function sql_selectWeeks($year, $isCurrent) {
+	return mysqli_query($GLOBALS["dbConnection"], "SELECT * FROM Weeks WHERE YEAR(StartDate)=" . $year . " AND IsCurrent=" . $isCurrent);
 }
 ?>
