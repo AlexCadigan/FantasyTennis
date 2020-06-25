@@ -95,13 +95,6 @@ function getData($connection, $year, $currentWeek, $startDate) {
 	$tournaments = $htmlScraper->find(".tourney-title");
 	$numTournaments = count($tournaments);
 	$dates = $htmlScraper->find(".tourney-dates");
-
-	// Tournament and tournament date counts should match
-	if ($numTournaments !== count($dates)) {
-		echo("Number of tournaments does not match number of dates.");
-		return;
-	}
-
 	$databaseCurrentWeek = $currentWeek;
 	$firstWeek = true;
 	$previousDate = null;
@@ -113,8 +106,8 @@ function getData($connection, $year, $currentWeek, $startDate) {
 		$dates[$i] = str_replace(".", "-", trim(html_entity_decode($dates[$i]->plaintext, ENT_QUOTES, "UTF-8")));
 		$unixDate = strtotime($dates[$i]);
 
-		// If the current tournament should be ignored (it's too hard to get the results)
-		if (ignoreTournament($tournaments[$i])) {
+		// Skip tournament if it doesn't have a name, date, or we should ignore it
+		if (!$tournaments[$i] || !$dates[$i] || ignoreTournament($tournaments[$i])) {
 			continue;
 		}
 

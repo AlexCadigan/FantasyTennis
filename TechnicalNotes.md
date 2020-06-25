@@ -1,11 +1,5 @@
 # Technical Notes
 
-## File Structure
-* **Config** - Application-wide configuration.
-* **CronJobScripts** - Sripts run automatically and cyclically.  Used to scrap data from websites and update the database.
-	* **Lib** - Core pieces of functionality used by multiple scripts, such as parsing the HTML DOM.
-	* **OnceADay** - Scripts run once a day.
-
 ## Database Structure
 Structure of the SQL database tables.
 
