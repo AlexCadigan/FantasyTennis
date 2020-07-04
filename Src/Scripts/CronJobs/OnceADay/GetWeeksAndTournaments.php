@@ -2,16 +2,16 @@
 /**
  * Functions to scrape and store the week and tournament data.
  */
+require_once(ROOT_DIR . "Scripts/Common/CoreFunctions.php");
+require_once(ROOT_DIR . "Scripts/Common/Queries.php");
+require_once(ROOT_DIR . "Scripts/CronJobs/Common/simple_html_dom.php");
+require_once(ROOT_DIR . "Scripts/CronJobs/Common/ScrapingHelp.php");
 
 /**
  *
  */
-function scrapeWeeksAndTournaments() {
-	$currentYear = date("Y");
-
-	if (!$currentYear) {
-		throw new Exception("Could not get current year.");
-	}
+function getWeeksAndTournaments() {
+	$currentYear = getCurrentYear();
 
 	// Get the current week
 	$result = sql_selectWeeks($currentYear, 1);
@@ -21,6 +21,13 @@ function scrapeWeeksAndTournaments() {
 	}
 
 	$currentWeek = $originalCurrentWeek = mysqli_fetch_assoc($result)["Week"];
+
+	// If there's no current week because there's no data yet for this year
+	if (!$currentWeek) {
+		$currentWeek = 1;
+		$startDate = null;
+		scrapeWeeksAndTournaments();
+	}
 }
 
 
@@ -118,6 +125,11 @@ function setupNextYearData($connection, $nextYear, $currentYearCurrentWeek) {
  * @return Void.
  */
 function getData($connection, $year, $currentWeek, $startDate) {
+	
+	// Get tournament end date info and possibly timezone info
+
+
+
 	// Scrape tournament and date info
 	$htmlScraper = file_get_html("https://www.atptour.com/en/scores/results-archive?year=" . $year);
 	$tournaments = $htmlScraper->find(".tourney-title");
