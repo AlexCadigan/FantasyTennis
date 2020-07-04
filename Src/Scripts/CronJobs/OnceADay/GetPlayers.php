@@ -2,6 +2,9 @@
 /**
  * Functions to scrape and store player data.
  */
+require_once(ROOT_DIR . "Scripts/Common/Queries.php");
+require_once(ROOT_DIR . "Scripts/CronJobs/Common/simple_html_dom.php");
+require_once(ROOT_DIR . "Scripts/CronJobs/Common/ScrapingHelp.php");
 
 /**
  * Looks through ATP rankings and scrapes the player's names.
