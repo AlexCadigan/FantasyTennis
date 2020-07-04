@@ -2,7 +2,7 @@
 /**
  * SQL Queries.
  */
-require_once("Config/DBConnection.php");
+require_once(ROOT_DIR . "Scripts/Config/DBConnection.php");
 
 /**
  * Selects data from the Players table.
