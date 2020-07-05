@@ -2,6 +2,7 @@
 /**
  * Functions to scrape and store player data.
  */
+require_once(ROOT_DIR . "Scripts/Common/CoreFunctions.php");
 require_once(ROOT_DIR . "Scripts/Common/Queries.php");
 require_once(ROOT_DIR . "Scripts/CronJobs/Common/simple_html_dom.php");
 require_once(ROOT_DIR . "Scripts/CronJobs/Common/ScrapingHelp.php");
@@ -41,13 +42,7 @@ function processPlayers($players) {
  * @param $player - The player to verify or add.
  */
 function verifyOrAddPlayer($player) {
-	$result = sql_selectPlayers($player);
-
-	if (mysqli_num_rows($result) > 1) {
-		throw new Exception("Duplicate entries found when selecting player '" . $player . "'.");
-	}
-
-	if (!($row = mysqli_fetch_assoc($result))) {
+	if (!($row = mysqli_fetch_assoc(checkForDuplicates(sql_selectPlayers($player))))) {
 		if (!sql_insertPlayer($player)) {
 			throw new Exception("Error inserting player '" . $player . "' into the DB.");
 		}
