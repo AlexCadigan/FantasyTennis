@@ -8,111 +8,87 @@ require_once(ROOT_DIR . "Scripts/CronJobs/Common/simple_html_dom.php");
 require_once(ROOT_DIR . "Scripts/CronJobs/Common/ScrapingHelp.php");
 
 /**
- *
+ * Main driver for scraping weeks and tournaments data.
  */
 function getWeeksAndTournaments() {
 	$currentYear = getCurrentYear();
-
-	// Get the current week
-	$result = sql_selectWeeks($currentYear, 1);
-
-	if (mysqli_num_rows($result) > 1) {
-		throw new Exception("Multiple current weeks returned for year '" . $currentYear . "'.");
-	}
-
-	$currentWeek = $originalCurrentWeek = mysqli_fetch_assoc($result)["Week"];
+	$currentWeek = $originalCurrentWeek = getCurrentWeek($currentYear);
 
 	// If there's no current week because there's no data yet for this year
-	if (!$currentWeek) {
-		$currentWeek = 1;
+	if (is_null($currentWeek)) {
+		$currentWeek = 0;
 		$startDate = null;
-		scrapeWeeksAndTournaments();
-	}
-}
-
-
-/**
- * Calculates how many "weeks" there are this season and the next.  Gets information about the tournaments being
- * played this year and the next.  Stores weeks and tournaments information in the DB.
- */
-
-
-
-$currentYear = date("Y");
-setupThisYearData($connection, $currentYear);
-
-// Remove data that is more than 2 years old
-mysqli_query($connection, "DELETE FROM Weeks WHERE YEAR(StartDate)<" . ($currentYear - 1));
-mysqli_query($connection, "DELETE FROM Tournaments WHERE Year<" . ($currentYear - 1));
-
-/**
- * Sets up for scraping and analyzing the week and tournament data for this year.
- *
- * @param $connection - The connection to the database.
- * @param $year       - The current year.
- *
- * @return void.
- */
-function setupThisYearData($connection, $year) {
-	$currentWeek = $databaseCurrentWeek = mysqli_fetch_assoc(mysqli_query($connection, "SELECT Week FROM Weeks WHERE IsCurrent=1 AND YEAR(StartDate)=" . $year))["Week"];
-
-	// If there's no data yet for this year
-	if (!$currentWeek) {
-		$currentWeek = 1;
-		$startDate = null;
-		getData($connection, $year, $currentWeek, $startDate);
 	}
 	else {
 		// Start with tournaments 2 weeks in the future (so we don't mess up this and next week's data)
-		$originalWeek = $currentWeek += 2;
+		$currentWeek += 2;
+		$startDate = getStartDate($currentWeek, $originalCurrentWeek, $currentYear);
 
-		// Loop backwards if necessary to find a valid start date
-		while (!($startDate = strtotime(mysqli_fetch_assoc(mysqli_query($connection, "SELECT StartDate FROM Weeks WHERE Week=" . $currentWeek . " AND YEAR(StartDate)=" . $year))["StartDate"])) && $currentWeek >= $originalWeek - 2) {
-			$currentWeek --;
-		}
-
-		// Something is very wrong if start date is null here
 		if (!$startDate) {
-			echo("No start date found for the current week.");
-			return;
+			throw new Exception("No valid start date found.");
 		}
-
-		getData($connection, $year, $currentWeek, $startDate);
 	}
 
-	setupNextYearData($connection, $year + 1, $databaseCurrentWeek);
+	scrapeData($currentYear, $currentWeek, $startDate);
+	getNextYearWeeksAndTournaments($currentYear + 1);
+	removeOldData();
 }
 
 /**
- * Sets up for scraping and analyzing the week and tournament data for the next year.
- *
- * @param $connection             - The connection to the database.
- * @param $nextYear               - The next year.
- * @param $currentYearCurrentWeek - The current week of the current year.
- *
- * @return Void.
+ * Loops over the weeks to find a valid start date.
+ * @param  $startWeek - Week to start looping on (passed by reference).
+ * @param  $endWeek   - Week to end looping on.
+ * @param  $year      - Year to get date from.
+ * @return Start date to use when scraping data or null if no date is found.
  */
-function setupNextYearData($connection, $nextYear, $currentYearCurrentWeek) {
-	$currentYearNextWeek = mysqli_fetch_assoc(mysqli_query($connection, "SELECT Week FROM Weeks WHERE Week=" . ($currentYearCurrentWeek + 1) . " AND YEAR(StartDate)=" . ($nextYear - 1)))["Week"];
-
-	// If we are on the last week of this year (there is no next week for this year)
-	if (!$currentYearNextWeek) {
-		// Start looking at next year's second week (so we don't mess up the first week's data)
-		$nextYearCurrentWeek = 2;
-	}
-	else {
-		$nextYearCurrentWeek = 1;
-	}
-
-	$nextYearStartDate = strtotime(mysqli_fetch_assoc(mysqli_query($connection, "SELECT StartDate FROM Weeks WHERE Week=" . $nextYearCurrentWeek . " AND YEAR(StartDate)=" . $nextYear))["StartDate"]);
-
-	// If start date is null it means we don't have any data yet for the next year
-	if (!$nextYearStartDate) {
-		$nextYearCurrentWeek = 1;
+function getStartDate(&$startWeek, $endWeek, $year) {
+	// Loop backwards to find a valid start date
+	while ($startWeek >= $endWeek) {
+		// Check if start date exists
+		if ($startDate = strtotime(mysqli_fetch_assoc(checkForDuplicates(sql_selectWeeks($startWeek, $year, "")))["StartDate"])) {
+			return $startDate;
+		}
+		else {
+			$startWeek --;
+		}
 	}
 
-	getData($connection, $nextYear, $nextYearCurrentWeek, $nextYearStartDate);
+	return null;
 }
+
+/**
+ * Initiates scraping weeks and tournaments data for the next year.
+ * @param $nextYear - Year to scrape data from i.e. next year.
+ */
+function getNextYearWeeksAndTournaments($nextYear) {
+	$nextYearStartDate = strtotime(mysqli_fetch_assoc(checkForDuplicates(sql_selectWeeks(0, $nextYear, "")))["StartDate"]);
+	scrapeData($nextYear, 0, $nextYearStartDate);
+}
+
+/**
+ *
+ */
+function scrapeData($year, $week, $startDate) {
+	// Scrape tournament and date info
+	$htmlScraper = file_get_html("https://www.atptour.com/en/scores/results-archive?year=" . $year);
+	$tournaments = $htmlScraper->find(".tourney-title");
+	$numTournaments = count($tournaments);
+	$dates = $htmlScraper->find(".tourney-dates");
+	$databaseCurrentWeek = $currentWeek;
+	$firstWeek = true;
+	$previousDate = null;
+}
+
+/**
+ *
+ */
+function removeOldData() {
+	// Remove data that is more than 2 years old
+	// mysqli_query($connection, "DELETE FROM Weeks WHERE YEAR(StartDate)<" . ($currentYear - 1));
+	// mysqli_query($connection, "DELETE FROM Tournaments WHERE Year<" . ($currentYear - 1));
+}
+
+
 
 /**
  * Scrapes tournament data from the ATP website and analyzes and stores the week and tournament data in the database.
@@ -127,6 +103,8 @@ function setupNextYearData($connection, $nextYear, $currentYearCurrentWeek) {
 function getData($connection, $year, $currentWeek, $startDate) {
 	
 	// Get tournament end date info and possibly timezone info
+	".hero-date-range+ .hero-date-range"
+	".tourney-location"
 
 
 
