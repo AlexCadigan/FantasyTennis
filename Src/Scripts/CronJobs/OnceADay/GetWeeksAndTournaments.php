@@ -2,10 +2,18 @@
 /**
  * Functions to scrape and store the week and tournament data.
  */
-require_once(ROOT_DIR . "Scripts/Common/CoreFunctions.php");
+require_once(ROOT_DIR . "Scripts/Common/DatabaseHelp.php");
 require_once(ROOT_DIR . "Scripts/Common/Queries.php");
 require_once(ROOT_DIR . "Scripts/CronJobs/Common/simple_html_dom.php");
 require_once(ROOT_DIR . "Scripts/CronJobs/Common/ScrapingHelp.php");
+
+// Constants for getting the ATP tournament info
+define("ATP_URL", "https://www.atptour.com");
+define("TOURNAMENT_URL", "https://www.atptour.com/en/scores/results-archive?year=");
+define("TOURNAMENT_NAME_SELECTOR", ".tourney-title");
+define("TOURNAMENT_START_DATE_SELECTOR", ".tourney-dates");
+define("TOURNAMENT_LOCATION_SELECTOR", ".tourney-location");
+define("TOURNAMENT_END_DATE_SELECTOR", ".hero-date-range");
 
 /**
  * Main driver for scraping weeks and tournaments data.
@@ -66,17 +74,58 @@ function getNextYearWeeksAndTournaments($nextYear) {
 }
 
 /**
- *
+ * Scrapes tournament data from the ATP website.
+ * @param $year      - Year to scrape data from.
+ * @param $week      - Week to start at when updating database.
+ * @param $startDate - Start date of week to start at.
  */
 function scrapeData($year, $week, $startDate) {
+	// Scrape tournament information
+	$tournamentScraper = file_get_html(TOURNAMENT_URL . $year);
+
+	if (!$tournamentScraper) {
+		throw new Exception("Unable to open URL '" . TOURNAMENT_URL . $year . "'.");
+	}
+
+	$tournaments = $tournamentScraper->find(TOURNAMENT_NAME_SELECTOR);
+	$startDates = $tournamentScraper->find(TOURNAMENT_START_DATE_SELECTOR);
+	$locations = $tournamentScraper->find(TOURNAMENT_LOCATION_SELECTOR);
+	$endDates = scrapeEndDates($tournaments);
+
+
+
 	// Scrape tournament and date info
-	$htmlScraper = file_get_html("https://www.atptour.com/en/scores/results-archive?year=" . $year);
-	$tournaments = $htmlScraper->find(".tourney-title");
 	$numTournaments = count($tournaments);
-	$dates = $htmlScraper->find(".tourney-dates");
-	$databaseCurrentWeek = $currentWeek;
+	//$databaseCurrentWeek = $currentWeek;
 	$firstWeek = true;
 	$previousDate = null;
+}
+
+/**
+ * Scrapes tournament end dates from ATP website.
+ * @param  $tournamentInfo - Raw HTML tournament info.
+ * @return Array of raw HTML tournament end dates.
+ */
+function scrapeEndDates($tournaments) {
+	$endDates = [];
+
+	for ($i = 0; $i < count($tournaments); $i ++) {
+		$tournamentScraper = file_get_html(ATP_URL . trim($tournaments[$i]->href));
+
+		if (!$tournamentScraper) {
+			throw new Exception("Unable to open URL '" . ATP_URL . trim($tournaments[$i]->href) . "'.");
+		}
+
+		$endDate = $tournamentScraper->find(TOURNAMENT_END_DATE_SELECTOR);
+
+		if (count($endDate) !== 2) {
+			throw new Exception("Error scraping tournament end date.");
+		}
+
+		array_push($endDates, $endDate[1]->plaintext);
+	}
+
+	return $endDates;
 }
 
 /**
@@ -103,8 +152,8 @@ function removeOldData() {
 function getData($connection, $year, $currentWeek, $startDate) {
 	
 	// Get tournament end date info and possibly timezone info
-	".hero-date-range+ .hero-date-range"
-	".tourney-location"
+	// ".hero-date-range+ .hero-date-range"
+	// ".tourney-location"
 
 
 
