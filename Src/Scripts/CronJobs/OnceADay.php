@@ -4,12 +4,11 @@
  */
 define("ROOT_DIR", "../../");
 
-require_once("../Common/CoreFunctions.php");
+require_once("../Common/DatabaseHelp.php");
 require_once("OnceADay/GetPlayers.php");
-//require_once("OnceADay/GetWeeksAndTournaments.php");
+require_once("OnceADay/GetWeeksAndTournaments.php");
 
 scrapePlayers();
-//getWeeksAndTournaments();
-
+getWeeksAndTournaments();
 closeDBConnection();
 ?>

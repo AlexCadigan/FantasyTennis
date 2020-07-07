@@ -3,11 +3,6 @@
  * Contains useful and common helper functions.
  */
 
-// Constants for getting the ATP players
-define("MAX_PLAYER_RANK", 201); // Will get players ranked 1-300
-define("ATP_PLAYERS_URL", "https://www.atptour.com/en/rankings/singles?rankRange=");
-define("PLAYER_NAME_SELECTOR", "td.player-cell");
-
 /**
  * Removes encodings from and formats scrapped HTML data.  Replace "'" with "''" to avoid errors in SQL query strings.
  * @param  $data - Raw HTML data.

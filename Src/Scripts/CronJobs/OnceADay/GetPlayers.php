@@ -2,17 +2,27 @@
 /**
  * Functions to scrape and store player data.
  */
-require_once(ROOT_DIR . "Scripts/Common/CoreFunctions.php");
+require_once(ROOT_DIR . "Scripts/Common/DatabaseHelp.php");
 require_once(ROOT_DIR . "Scripts/Common/Queries.php");
 require_once(ROOT_DIR . "Scripts/CronJobs/Common/simple_html_dom.php");
 require_once(ROOT_DIR . "Scripts/CronJobs/Common/ScrapingHelp.php");
+
+// Constants for getting the ATP players
+define("MAX_PLAYER_RANK", 201); // Will get players ranked 1-300
+define("PLAYER_URL", "https://www.atptour.com/en/rankings/singles?rankRange=");
+define("PLAYER_NAME_SELECTOR", "td.player-cell");
 
 /**
  * Looks through ATP rankings and scrapes the player's names.
  */
 function scrapePlayers() {
 	for ($rank = 1; $rank <= MAX_PLAYER_RANK; $rank += 100) {
-		$playerScraper = file_get_html(ATP_PLAYERS_URL . $rank . "-" . ($rank + 99));
+		$playerScraper = file_get_html(PLAYER_URL . $rank . "-" . ($rank + 99));
+
+		if (!$playerScraper) {
+			throw new Exception("Unable to open URL '" . PLAYER_URL . $rank . "-" . ($rank + 99) . "'.");
+		}
+
 		$players = $playerScraper->find(PLAYER_NAME_SELECTOR);
 
 		if (!$players) {
