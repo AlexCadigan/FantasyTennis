@@ -1,0 +1,4 @@
+{
+	"exec": "npm run devStart",
+	"ext": "json,ts"
+}
