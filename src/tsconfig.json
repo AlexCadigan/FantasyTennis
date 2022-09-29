@@ -1,0 +1,36 @@
+{
+	"compilerOptions": {
+		// Compiler options
+		"allowUnreachableCode": false,
+		"allowUnusedLabels": false,
+		"exactOptionalPropertyTypes": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitAny": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+		"noUncheckedIndexedAccess": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"strict": true,
+
+		// Modules
+		"baseUrl": "server",
+		"module": "CommonJS",
+		"moduleResolution": "node",
+		"declarationMap": true,
+		"outDir": "dist",
+		"sourceMap": true,
+
+		// Interop Constraints
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+
+		// Language and Environment
+		"jsx": "react",
+
+		// Projects
+		"composite": true
+	}
+}
