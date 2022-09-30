@@ -160,16 +160,23 @@ class App {
 		});
 
 		// Catch all other errors
-		this.app.use((err: HttpError, _req: Request, res: Response) => {
-			// Set locals (only provide error in development)
-			res.locals.message = err.message;
-			res.locals.error =
-				this.nodeEnv === EnvironmentDefaults.devNodeEnv ? err : {};
+		this.app.use(
+			(
+				err: HttpError,
+				_req: Request,
+				res: Response,
+				_next: NextFunction
+			) => {
+				// Set locals (only provide error in development)
+				res.locals.message = err.message;
+				res.locals.error =
+					this.nodeEnv === EnvironmentDefaults.devNodeEnv ? err : {};
 
-			// Render the error page
-			res.status(err.status || 500);
-			res.render("error");
-		});
+				// Render the error page
+				res.status(err.status || 500);
+				res.render("error");
+			}
+		);
 	}
 
 	//#endregion
