@@ -133,7 +133,7 @@ class App {
 
 		// View engine setup
 		this.app.set("views", path.join(__dirname, FilePaths.views));
-		this.app.set("view engine", "jade");
+		this.app.set("view engine", "pug");
 
 		this.initializeMiddleware();
 		this.initializeErrorHandling();
