@@ -1,0 +1,11 @@
+# npm
+node_modules
+
+# TypeScript
+dist
+
+# VS Code
+.vscode
+
+# Miscellaneous
+*.docx
