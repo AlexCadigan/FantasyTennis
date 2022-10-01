@@ -25,7 +25,7 @@
 		"devBuild": "tsc",
 		"lint": "npm run prettier && npm run eslint",
 		"prettier": "npx prettier --write **/*.{json,ts,test.ts}",
-		"eslint": "npx eslint **/*.ts",
+		"eslint": "npx eslint **/*.{ts,test.ts}",
 		"test": "jest"
 	},
 	"dependencies": {
