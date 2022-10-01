@@ -1,8 +1,8 @@
 import createError, { HttpError } from "http-errors";
-import express, { NextFunction, Request, Response } from "express";
+import express, { Application, NextFunction, Request, Response } from "express";
+import http, { Server } from "http";
 import cookieParser from "cookie-parser";
 import { debug } from "console";
-import http from "http";
 import logger from "morgan";
 import path from "path";
 
@@ -32,10 +32,10 @@ class App {
 	//#region Instance Variables
 
 	// Express application
-	private readonly app: express.Application;
+	private readonly app: Application;
 
 	// Server that application is running on
-	private readonly server: http.Server;
+	private readonly server: Server;
 
 	// Port that the server is running on
 	private readonly port: string = EnvironmentDefaults.port;
