@@ -15,7 +15,7 @@
 		"strict": true,
 
 		// Modules
-		"baseUrl": "server",
+		"baseUrl": "./",
 		"module": "CommonJS",
 		"moduleResolution": "node",
 		"declarationMap": true,

@@ -23,9 +23,9 @@
 		"devStart": "node dist/server/app.js",
 		"predevStart": "npm run devBuild",
 		"devBuild": "tsc",
-		"predevBuild": "npm run devPrettier && npm run devEslint",
-		"devPrettier": "npx prettier --write **/*.{json,ts}",
-		"devEslint": "npx eslint **/*.ts",
+		"lint": "npm run prettier && npm run eslint",
+		"prettier": "npx prettier --write **/*.{json,ts}",
+		"eslint": "npx eslint **/*.ts",
 		"test": "jest"
 	},
 	"dependencies": {
