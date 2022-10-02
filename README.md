@@ -1,8 +1,11 @@
 # FantasyTennis
+
 Play fantasy tennis for free!
 
 ## Setup
-* `$ npm install`
+
+-   `$ npm install`
 
 ## Testing
-* `$ npm run nodemon`
+
+-   `$ npm run nodemon`
