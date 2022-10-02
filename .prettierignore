@@ -3,3 +3,9 @@ node_modules
 
 # TypeScript
 dist
+
+# Testing
+coverage
+
+# VS Code
+.vscode
