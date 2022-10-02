@@ -1,6 +1,6 @@
 {
 	"collectCoverage": true,
-
+	"modulePathIgnorePatterns": ["dist"],
 	"preset": "ts-jest",
-	"testEnvironment": "node"
+	"runner": "jest-runner-eslint"
 }

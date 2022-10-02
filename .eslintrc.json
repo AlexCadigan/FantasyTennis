@@ -2,7 +2,8 @@
 	"env": {
 		"node": true,
 		"commonjs": true,
-		"es2022": true
+		"es2022": true,
+		"jest/globals": true
 	},
 	"extends": [
 		"eslint:recommended",
@@ -640,5 +641,12 @@
 		"jsdoc/require-param-type": "off"
 
 		// TODO: Configure React/JSX configuration
-	}
+	},
+	"overrides": [
+		{
+			"files": ["test/**"],
+			"plugins": ["jest"],
+			"extends": ["plugin:jest/recommended"]
+		}
+	]
 }
