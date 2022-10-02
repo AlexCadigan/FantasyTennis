@@ -120,12 +120,6 @@
 			}
 		],
 		"max-classes-per-file": "error",
-		"max-nested-callbacks": [
-			"error",
-			{
-				"max": 1
-			}
-		],
 		"max-statements-per-line": "error",
 		"multiline-ternary": ["error", "always-multiline"],
 		"new-cap": [
@@ -647,6 +641,17 @@
 			"files": ["test/**"],
 			"plugins": ["jest"],
 			"extends": ["plugin:jest/recommended"]
+		},
+		{
+			"files": ["server/**"],
+			"rules": {
+				"max-nested-callbacks": [
+					"error",
+					{
+						"max": 1
+					}
+				]
+			}
 		}
 	]
 }
