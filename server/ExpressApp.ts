@@ -1,8 +1,6 @@
 import createError, { HttpError } from "http-errors";
 import express, { Application, NextFunction, Request, Response } from "express";
-import http, { Server } from "http";
 import cookieParser from "cookie-parser";
-import { debug } from "console";
 import logger from "morgan";
 import path from "path";
 
@@ -16,10 +14,9 @@ enum FilePaths {
 }
 
 /**
- * Default environment values5
+ * Default environment values
  */
 enum EnvironmentDefaults {
-	port = "3000",
 	devNodeEnv = "development"
 }
 
@@ -28,17 +25,14 @@ enum EnvironmentDefaults {
 /**
  * Represents the Express application and contains core business logic.
  */
-class App {
-	//#region Instance Variables
+export default class ExpressApp {
+	//#region Properties
 
-	// Express application
+	// Actual Express application object
 	private readonly app: Application;
 
-	// Server that application is running on
-	private readonly server: Server;
-
 	// Port that the server is running on
-	private readonly port: string = EnvironmentDefaults.port;
+	private readonly port: string;
 
 	// Node environment that the application is running in
 	private readonly nodeEnv: string = EnvironmentDefaults.devNodeEnv;
@@ -48,82 +42,34 @@ class App {
 	//#region Constructors
 
 	/**
-	 * Initializes an instance of this object.
+	 * Creates an instance of an Express application.
+	 * @param port Port that the server is running on.
 	 */
-	public constructor() {
-		// Create application and server
+	public constructor(port: string) {
 		this.app = express();
-		this.server = http.createServer(this.app);
 
 		// Set environment variables
-		this.port = process.env.PORT ?? this.port;
+		this.port = port;
 		this.nodeEnv = process.env.NODE_ENV ?? this.nodeEnv;
-	}
-
-	//#endregion
-
-	//#region Public Functions
-
-	/**
-	 * Configures the Express server for this application.
-	 */
-	public setupServer(): void {
-		this.server.listen(this.port);
-
-		this.server.on("error", (error: NodeJS.ErrnoException) => {
-			this.onError(error);
-		});
-
-		this.server.on("listening", () => {
-			this.onListening();
-		});
 
 		this.setupExpressApp();
 	}
 
 	//#endregion
 
+	//#region Accessors
+
+	/**
+	 * Gets the express application used by the program.
+	 * @returns Express application object.
+	 */
+	public getExpressApp(): Application {
+		return this.app;
+	}
+
+	//#endregion
+
 	//#region Private Functions
-
-	/**
-	 * Event listener for the HTTP server "error" event.  Formats the error into a user-friendly
-	 * message if appropriate.
-	 * @param error Error sent from the server.
-	 */
-	private onError(error: NodeJS.ErrnoException): void {
-		if (error.syscall !== "listen") {
-			throw error;
-		}
-
-		const baseMessage = `Port ${this.port}`;
-
-		// Handle specific listen errors
-		switch (error.code) {
-			case "EACCES":
-				console.error(`${baseMessage} requires elevated privileges`);
-				process.exit(1);
-			// break unecessary
-			case "EADDRINUSE":
-				console.error(`${baseMessage} is already in use`);
-				process.exit(1);
-			// break unecessary
-			default:
-				throw error;
-		}
-	}
-
-	/**
-	 * Event listener for the HTTP server "listening" event.
-	 */
-	private onListening(): void {
-		// Show what port we're listening on
-		const address = this.server.address();
-		const baseMessage =
-			typeof address === "string"
-				? `Pipe ${address}`
-				: `Port ${address?.port}`;
-		debug(`Listening on ${baseMessage}`);
-	}
 
 	/**
 	 * Preform Express application setup.
@@ -181,6 +127,3 @@ class App {
 
 	//#endregion
 }
-
-const expressApp = new App();
-expressApp.setupServer();
