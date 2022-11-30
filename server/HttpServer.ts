@@ -13,6 +13,9 @@ enum EnvironmentDefaults {
 
 //#endregion
 
+/**
+ * Represents the HTTP server this application runs on. 
+ */
 class HttpServer {
 	//#region Properties
 
