@@ -9,7 +9,7 @@ import path from "path";
 /**
  * Application filepaths.
  */
-enum FilePaths {
+export enum FilePaths {
 	views = "../../server/views/"
 }
 

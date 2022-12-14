@@ -7,14 +7,14 @@ import ExpressApp from "./ExpressApp";
 /**
  * Default environment values
  */
-enum EnvironmentDefaults {
+export enum EnvironmentDefaults {
 	port = "3000"
 }
 
 //#endregion
 
 /**
- * Represents the HTTP server this application runs on. 
+ * Represents the HTTP server this application runs on.
  */
 class HttpServer {
 	//#region Properties
