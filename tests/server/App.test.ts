@@ -54,7 +54,7 @@ class AppTest {
 				expect(res.status).toEqual(404);
 			});
 
-			// Test error handling for other statuses, not just 404 (i.e. 500).  I can't figure out how to mock these.
+			// TODO: Test error handling for other statuses, not just 404 (i.e. 500).  I can't figure out how to mock these.
 		});
 	}
 
