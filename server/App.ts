@@ -29,7 +29,7 @@ export default class App {
 	private readonly port: string;
 
 	// Node environment that the application is running in
-	private readonly nodeEnv: string = Settings.devNodeEnv;
+	private readonly nodeEnv: string;
 
 	//#endregion
 
@@ -44,7 +44,7 @@ export default class App {
 
 		// Set environment variables
 		this.port = port;
-		this.nodeEnv = process.env.NODE_ENV ?? this.nodeEnv;
+		this.nodeEnv = process.env.NODE_ENV ?? Settings.devNodeEnv;
 
 		this.setupApp();
 	}

@@ -18,6 +18,8 @@ class AppTest {
 
 	//#endregion
 
+	//#region Tests
+
 	/**
 	 * Runs all unit tests for this class.
 	 */
@@ -55,6 +57,8 @@ class AppTest {
 			// Test error handling for other statuses, not just 404 (i.e. 500).  I can't figure out how to mock these.
 		});
 	}
+
+	//#endregion
 }
 
 new AppTest().runTests();
