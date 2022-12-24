@@ -3,6 +3,7 @@ import express, { Application, NextFunction, Request, Response } from "express";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 import path from "path";
+import Settings from "./Config/Config";
 
 //#region Enums
 
@@ -13,46 +14,39 @@ export enum FilePaths {
 	views = "../../server/views/"
 }
 
-/**
- * Default environment values
- */
-enum EnvironmentDefaults {
-	devNodeEnv = "development"
-}
-
 //#endregion
 
 /**
- * Represents the Express application and contains core business logic.
+ * Represents the application and contains core business logic.
  */
-export default class ExpressApp {
+export default class App {
 	//#region Properties
 
-	// Actual Express application object
-	private readonly app: Application;
+	// Express application object
+	private readonly expressApp: Application;
 
-	// Port that the server is running on
+	// Port that the app is running on
 	private readonly port: string;
 
 	// Node environment that the application is running in
-	private readonly nodeEnv: string = EnvironmentDefaults.devNodeEnv;
+	private readonly nodeEnv: string = Settings.devNodeEnv;
 
 	//#endregion
 
 	//#region Constructors
 
 	/**
-	 * Creates an instance of an Express application.
-	 * @param port Port that the server is running on.
+	 * Creates an instance of the application.
+	 * @param port Port that the app is running on.
 	 */
 	public constructor(port: string) {
-		this.app = express();
+		this.expressApp = express();
 
 		// Set environment variables
 		this.port = port;
 		this.nodeEnv = process.env.NODE_ENV ?? this.nodeEnv;
 
-		this.setupExpressApp();
+		this.setupApp();
 	}
 
 	//#endregion
@@ -60,11 +54,27 @@ export default class ExpressApp {
 	//#region Accessors
 
 	/**
-	 * Gets the express application used by the program.
+	 * Gets the express application object used by the application.
 	 * @returns Express application object.
 	 */
 	public getExpressApp(): Application {
-		return this.app;
+		return this.expressApp;
+	}
+
+	/**
+	 * Gets the port used by the app.
+	 * @returns Port used by the app.
+	 */
+	public getPort(): string {
+		return this.port;
+	}
+
+	/**
+	 * Gets the node environment the app is running in.
+	 * @returns Node environment the app is running in.
+	 */
+	public getNodeEnv(): string {
+		return this.nodeEnv;
 	}
 
 	//#endregion
@@ -72,14 +82,14 @@ export default class ExpressApp {
 	//#region Private Functions
 
 	/**
-	 * Preform Express application setup.
+	 * Preform application setup.
 	 */
-	private setupExpressApp(): void {
-		this.app.set("port", this.port);
+	private setupApp(): void {
+		this.expressApp.set("port", this.port);
 
 		// View engine setup
-		this.app.set("views", path.join(__dirname, FilePaths.views));
-		this.app.set("view engine", "pug");
+		this.expressApp.set("views", path.join(__dirname, FilePaths.views));
+		this.expressApp.set("view engine", "pug");
 
 		this.initializeMiddleware();
 		this.initializeErrorHandling();
@@ -89,11 +99,11 @@ export default class ExpressApp {
 	 * Setup middleware used by the application.
 	 */
 	private initializeMiddleware(): void {
-		this.app.use(logger("dev"));
-		this.app.use(express.json());
-		this.app.use(express.urlencoded({ extended: false }));
-		this.app.use(express.static(path.join(__dirname, "public")));
-		this.app.use(cookieParser());
+		this.expressApp.use(logger("dev"));
+		this.expressApp.use(express.json());
+		this.expressApp.use(express.urlencoded({ extended: false }));
+		this.expressApp.use(express.static(path.join(__dirname, "public")));
+		this.expressApp.use(cookieParser());
 	}
 
 	/**
@@ -101,12 +111,14 @@ export default class ExpressApp {
 	 */
 	private initializeErrorHandling(): void {
 		// Catch 404 errors and forward them to the error handler
-		this.app.use((_req: Request, _res: Response, next: NextFunction) => {
-			next(createError(404));
-		});
+		this.expressApp.use(
+			(_req: Request, _res: Response, next: NextFunction) => {
+				next(createError(404));
+			}
+		);
 
 		// Catch all other errors
-		this.app.use(
+		this.expressApp.use(
 			(
 				err: HttpError,
 				_req: Request,
@@ -116,7 +128,7 @@ export default class ExpressApp {
 				// Set locals (only provide error in development)
 				res.locals.message = err.message;
 				res.locals.error =
-					this.nodeEnv === EnvironmentDefaults.devNodeEnv ? err : {};
+					this.nodeEnv === Settings.devNodeEnv ? err : {};
 
 				// Render the error page
 				res.status(err.status || 500);

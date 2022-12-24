@@ -1,32 +1,22 @@
-import http, { Server } from "http";
+import { createServer, Server } from "http";
+import App from "./App";
 import { debug } from "console";
-import ExpressApp from "./ExpressApp";
-
-//#region Enums
+import Settings from "./Config/Config";
 
 /**
- * Default environment values
+ * Represents the server the application runs on.
  */
-export enum EnvironmentDefaults {
-	port = "3000"
-}
-
-//#endregion
-
-/**
- * Represents the HTTP server this application runs on.
- */
-class HttpServer {
+class AppServer {
 	//#region Properties
 
 	// Express application used by the server
-	private readonly expressApp: ExpressApp;
+	private readonly expressApp: App;
 
 	// Actual HTTP server object
 	private readonly server: Server;
 
 	// Port that the server is running on
-	private readonly port: string = EnvironmentDefaults.port;
+	private readonly port: string = Settings.port;
 
 	//#endregion
 
@@ -39,8 +29,8 @@ class HttpServer {
 		this.port = process.env.PORT ?? this.port;
 
 		// Create Express application and HTTP server
-		this.expressApp = new ExpressApp(this.port);
-		this.server = http.createServer(this.expressApp.getExpressApp());
+		this.expressApp = new App(this.port);
+		this.server = createServer(this.expressApp.getExpressApp());
 
 		this.setupServer();
 	}
@@ -107,4 +97,4 @@ class HttpServer {
 	//#endregion
 }
 
-export default new HttpServer();
+export default new AppServer();
