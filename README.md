@@ -6,6 +6,16 @@ Play fantasy tennis for free!
 
 -   `$ npm install`
 
-## Testing
+## Scripts
+
+### Start App
 
 -   `$ npm run nodemon`
+
+### Lint
+
+-   `$ npm run lint`
+
+### Unit Tests
+
+-   `$ npm run test`
