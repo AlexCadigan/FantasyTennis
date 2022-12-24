@@ -20,7 +20,7 @@
 	},
 	"scripts": {
 		"nodemon": "npx nodemon",
-		"devStart": "node dist/server/HttpServer.js",
+		"devStart": "node dist/server/StartApp.js",
 		"predevStart": "npm run devBuild",
 		"devBuild": "tsc",
 		"lint": "npm run prettier && npm run eslint",

@@ -6,17 +6,17 @@ import Settings from "./Config/Config";
 /**
  * Represents the server the application runs on.
  */
-class AppServer {
+export default class AppServer {
 	//#region Properties
 
-	// Express application used by the server
-	private readonly expressApp: App;
-
-	// Actual HTTP server object
-	private readonly server: Server;
-
 	// Port that the server is running on
-	private readonly port: string = Settings.port;
+	private readonly port: string;
+
+	// Application running on the server
+	private readonly app: App;
+
+	// HTTP server object
+	private readonly server: Server;
 
 	//#endregion
 
@@ -26,13 +26,41 @@ class AppServer {
 	 * Creates an instance of an HTTP server.
 	 */
 	public constructor() {
-		this.port = process.env.PORT ?? this.port;
+		this.port = process.env.PORT ?? Settings.port;
 
-		// Create Express application and HTTP server
-		this.expressApp = new App(this.port);
-		this.server = createServer(this.expressApp.getExpressApp());
+		// Create application and HTTP server
+		this.app = new App(this.port);
+		this.server = createServer(this.app.getExpressApp());
 
 		this.setupServer();
+	}
+
+	//#endregion
+
+	//#region Accessors
+
+	/**
+	 * Gets the port the server is running on.
+	 * @returns Port the server is running on.
+	 */
+	public getPort(): string {
+		return this.port;
+	}
+
+	/**
+	 * Gets the application running on the server.
+	 * @returns Application running on the server.
+	 */
+	public getApp(): App {
+		return this.app;
+	}
+
+	/**
+	 * Gets the HTTP server running.
+	 * @returns HTTP server running.
+	 */
+	public getServer(): Server {
+		return this.server;
 	}
 
 	//#endregion
@@ -96,5 +124,3 @@ class AppServer {
 
 	//#endregion
 }
-
-export default new AppServer();
