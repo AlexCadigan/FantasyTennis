@@ -34,7 +34,11 @@ class AppServerTest {
 			// Verify the server starts listening
 			it("Constructor starts the server listening", () => {
 				expect(this.mockAppServer.getServer().listening).toBeTruthy();
-				expect(this.mockAppServer.getServer().address()).not.toBeNull();
+
+				const address = this.mockAppServer.getServer().address();
+				typeof address === "string"
+					? expect(address).toEqual(Settings.port)
+					: expect(address?.port).toEqual(Number(Settings.port));
 			});
 
 			// Preforms cleanup actions needed after each test
