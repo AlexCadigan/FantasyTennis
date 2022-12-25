@@ -2,7 +2,8 @@
 	"env": {
 		"node": true,
 		"commonjs": true,
-		"es2022": true
+		"es2022": true,
+		"jest/globals": true
 	},
 	"extends": [
 		"eslint:recommended",
@@ -119,12 +120,6 @@
 			}
 		],
 		"max-classes-per-file": "error",
-		"max-nested-callbacks": [
-			"error",
-			{
-				"max": 1
-			}
-		],
 		"max-statements-per-line": "error",
 		"multiline-ternary": ["error", "always-multiline"],
 		"new-cap": [
@@ -257,7 +252,7 @@
 		"no-useless-return": "error",
 		"no-var": "error",
 		"no-void": "error",
-		"no-warning-comments": "error",
+		"no-warning-comments": "off",
 		"no-whitespace-before-property": "error",
 		"nonblock-statement-body-position": "error",
 		"object-curly-newline": [
@@ -551,6 +546,7 @@
 		"@typescript-eslint/no-unused-expressions": [
 			"error",
 			{
+				"allowTernary": true,
 				"enforceForJSX": true
 			}
 		],
@@ -631,14 +627,34 @@
 		"semi": "off",
 		"@typescript-eslint/semi": ["error", "always"],
 		"space-before-function-paren": "off",
-		"@typescript-eslint/space-before-function-paren": ["error", "never"],
+		"@typescript-eslint/space-before-function-paren": "off",
 		"space-infix-ops": "off",
 		"@typescript-eslint/space-infix-ops": "error",
 
 		//jsdoc
 		"jsdoc/newline-after-description": ["error", "never"],
-		"jsdoc/require-param-type": "off"
+		"jsdoc/require-param": "error",
+		"jsdoc/require-param-type": "off",
+		"jsdoc/require-returns-type": "off"
 
 		// TODO: Configure React/JSX configuration
-	}
+	},
+	"overrides": [
+		{
+			"files": ["test/**"],
+			"plugins": ["jest"],
+			"extends": ["plugin:jest/recommended"]
+		},
+		{
+			"files": ["server/**"],
+			"rules": {
+				"max-nested-callbacks": [
+					"error",
+					{
+						"max": 1
+					}
+				]
+			}
+		}
+	]
 }

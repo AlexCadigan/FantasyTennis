@@ -13,9 +13,10 @@
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 		"strict": true,
+		"target": "ES6",
 
 		// Modules
-		"baseUrl": "server",
+		"baseUrl": "./",
 		"module": "CommonJS",
 		"moduleResolution": "node",
 		"declarationMap": true,
