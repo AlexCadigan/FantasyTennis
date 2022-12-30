@@ -1,9 +1,14 @@
-/**
- *
- * @returns {JSX.Element} Element representing the app.
- */
-function App(): JSX.Element {
-	return <div>Login page goes here.</div>;
-}
+import React from "react";
 
-export default App;
+/**
+ * Main component class representing the application.
+ */
+export default class App extends React.Component {
+	/**
+	 * Generate HTML content for the component.
+	 * @returns {JSX.Element} JSX element representing the application.
+	 */
+	override render(): JSX.Element {
+		return <div>TODO: add app content.</div>;
+	}
+}
