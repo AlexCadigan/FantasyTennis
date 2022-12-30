@@ -1,8 +1,9 @@
-# npm
+# Dependencies
 node_modules
 
-# TypeScript
+# Production
 dist
+build
 
 # Testing
 coverage
