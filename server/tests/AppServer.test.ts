@@ -1,5 +1,5 @@
-import AppServer from "../../server/AppServer";
-import Settings from "../../server/Config/Config";
+import AppServer from "../src/AppServer";
+import Settings from "../src/config/Config";
 
 /**
  * Unit tests for the AppServer class.
@@ -34,13 +34,16 @@ class AppServerTest {
 			// Verify the server starts listening
 			it("Constructor starts the server listening", () => {
 				const httpServer = this.mockAppServer.getServer();
+				const address = httpServer.address();
+				const addressPort =
+					typeof address === "string" ? address : address?.port;
+				const settingPort =
+					typeof address === "string"
+						? Settings.port
+						: Number(Settings.port);
 
 				expect(httpServer.listening).toBeTruthy();
-
-				const address = httpServer.address();
-				typeof address === "string"
-					? expect(address).toEqual(Settings.port)
-					: expect(address?.port).toEqual(Number(Settings.port));
+				expect(addressPort).toEqual(settingPort);
 			});
 
 			// Preforms cleanup actions needed after each test

@@ -1,8 +1,8 @@
-import App, { FilePaths } from "../../server/App";
+import App, { FilePaths } from "../src/App";
 import { Application } from "express";
 import path from "path";
 import request from "supertest";
-import Settings from "../../server/Config/Config";
+import Settings from "../src/config/Config";
 
 /**
  * Unit tests for the App class.
@@ -42,7 +42,7 @@ class AppTest {
 			it("Constructor sets up Express app correctly", () => {
 				expect(this.mockExpressApp.get("port")).toEqual(Settings.port);
 				expect(this.mockExpressApp.get("views")).toEqual(
-					path.join(__dirname, "../", FilePaths.views)
+					path.join(__dirname, FilePaths.views)
 				);
 				expect(this.mockExpressApp.get("view engine")).toEqual("pug");
 			});

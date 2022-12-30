@@ -1,0 +1,35 @@
+{
+	"name": "server",
+	"version": "1.0.0",
+	"author": "Alex Cadigan",
+	"description": "Server code for the Fantasy Tennis app.",
+	"license": "MIT",
+	"main": "StartApp.js",
+	"scripts": {
+		"nodemon": "npx nodemon",
+		"start": "node ../dist/server/src/StartApp.js",
+		"prestart": "npm run build",
+		"build": "tsc",
+		"test": "jest"
+	},
+	"dependencies": {
+		"cookie-parser": "^1.4.6",
+		"express": "^4.18.1",
+		"http-errors": "^2.0.0",
+		"morgan": "^1.10.0",
+		"pug": "^3.0.2"
+	},
+	"devDependencies": {
+		"@types/cookie-parser": "^1.4.3",
+		"@types/express": "^4.17.14",
+		"@types/http-errors": "^1.8.2",
+		"@types/jest": "^29.1.0",
+		"@types/morgan": "^1.9.3",
+		"@types/node": "^18.11.18",
+		"@types/supertest": "^2.0.12",
+		"jest": "^29.1.1",
+		"nodemon": "^2.0.20",
+		"supertest": "^6.2.4",
+		"ts-jest": "^29.0.3"
+	}
+}

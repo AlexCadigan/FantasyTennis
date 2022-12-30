@@ -2,7 +2,7 @@
  * Default settings for the application.
  */
 enum Settings {
-	port = "3000",
+	port = "5000",
 	devNodeEnv = "development",
 	testNodeEnv = "test"
 }
