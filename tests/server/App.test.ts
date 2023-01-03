@@ -1,8 +1,8 @@
-import App, { FilePaths } from "../src/App";
+import App, { FilePaths } from "../../server/src/App";
 import { Application } from "express";
 import path from "path";
 import request from "supertest";
-import Settings from "../src/config/Config";
+import Settings from "../../server/src/config/Config";
 
 /**
  * Unit tests for the App class.

@@ -1,5 +1,5 @@
-import AppServer from "../src/AppServer";
-import Settings from "../src/config/Config";
+import AppServer from "../../server/src/AppServer";
+import Settings from "../../server/src/config/Config";
 
 /**
  * Unit tests for the AppServer class.
