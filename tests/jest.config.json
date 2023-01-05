@@ -1,5 +1,5 @@
 {
 	"collectCoverage": true,
 	"modulePathIgnorePatterns": ["dist"],
-	"preset": "ts-jest"
+	"projects": ["<rootDir>/client", "<rootDir>/server"]
 }
