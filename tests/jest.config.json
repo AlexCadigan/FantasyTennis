@@ -1,5 +1,4 @@
 {
 	"collectCoverage": true,
-	"modulePathIgnorePatterns": ["dist"],
 	"projects": ["<rootDir>/client", "<rootDir>/server"]
 }
