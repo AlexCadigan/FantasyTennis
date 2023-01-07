@@ -9,8 +9,7 @@
 		"nodemon": "npx nodemon",
 		"start": "node ../dist/server/src/StartApp.js",
 		"prestart": "npm run build",
-		"build": "tsc",
-		"test": "jest"
+		"build": "tsc"
 	},
 	"dependencies": {
 		"cookie-parser": "^1.4.6",
