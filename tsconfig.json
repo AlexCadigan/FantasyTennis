@@ -33,5 +33,6 @@
 
 		// Projects
 		"composite": true
-	}
+	},
+	"exclude": ["client", "dist", "tests"]
 }

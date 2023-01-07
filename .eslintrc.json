@@ -20,7 +20,6 @@
 			"jsx": true
 		},
 		"ecmaVersion": "latest",
-		"project": "tsconfig.json",
 		"sourceType": "module"
 	},
 	"plugins": ["@typescript-eslint", "jsdoc", "react", "react-hooks"],
