@@ -19,6 +19,7 @@
 	},
 	"scripts": {
 		"start": "react-scripts start",
+		"prestart": "npm run build",
 		"build": "react-scripts build"
 	},
 	"dependencies": {
