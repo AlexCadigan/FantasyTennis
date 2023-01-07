@@ -1,6 +1,7 @@
 import createError, { HttpError } from "http-errors";
 import express, { Application, NextFunction, Request, Response } from "express";
 import cookieParser from "cookie-parser";
+import indexRouter from "./routes/index";
 import logger from "morgan";
 import path from "path";
 import Settings from "./config/Config";
@@ -92,6 +93,7 @@ export default class App {
 		this.expressApp.set("view engine", "pug");
 
 		this.initializeMiddleware();
+		this.setupRoutes();
 		this.initializeErrorHandling();
 	}
 
@@ -102,8 +104,20 @@ export default class App {
 		this.expressApp.use(logger("dev"));
 		this.expressApp.use(express.json());
 		this.expressApp.use(express.urlencoded({ extended: false }));
-		this.expressApp.use(express.static(path.join(__dirname, "public")));
 		this.expressApp.use(cookieParser());
+	}
+
+	/**
+	 * Setup Express routes to use for requests/responses from the client.
+	 */
+	private setupRoutes(): void {
+		// Allows us to route directly to files in the 'build' folder
+		this.expressApp.use(
+			express.static(path.join(__dirname, "../../../client/build"))
+		);
+
+		// Configure routes
+		this.expressApp.use("/", indexRouter);
 	}
 
 	/**
