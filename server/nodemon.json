@@ -1,4 +1,0 @@
-{
-	"exec": "npm run start",
-	"ext": "json,pug,ts"
-}
