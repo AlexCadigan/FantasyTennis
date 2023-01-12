@@ -73,7 +73,6 @@ All code in this repository is provided under the [MIT License](https://github.c
 │   │   ├── App.ts
 │   │   ├── AppServer.ts
 │   │   └── StartApp.ts
-│   ├── nodemon.json
 │   └── package.json
 ├── tests
 │   ├── client
@@ -94,6 +93,7 @@ All code in this repository is provided under the [MIT License](https://github.c
 ├── .prettierrc.json
 ├── LICENSE.md
 ├── README.md
+├── nodemon.json
 ├── package-lock.json
 ├── package.json
 └── tsconfig.json
