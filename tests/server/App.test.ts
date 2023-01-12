@@ -36,6 +36,14 @@ describe("Test the App class", () => {
 		expect(mockExpressApp.get("view engine")).toEqual("pug");
 	});
 
+	// Smoke test to verify the index page is returned
+	it("Homepage request returns valid response", async () => {
+		const res = await request(mockExpressApp).get("/");
+
+		expect(res.statusCode).toBe(200);
+		expect(res.type).toBe("text/html");
+	});
+
 	// Request for non-existant resource returns 404 error
 	it("Get request for non-existant route returns 404 error", async () => {
 		const res = await request(mockExpressApp).get("/404Error");

@@ -12,6 +12,8 @@ import Settings from "./config/Config";
  * Application filepaths.
  */
 export enum FilePaths {
+	build = "../../../client/build",
+	testEnvBuild = "../../client/build",
 	views = "../../../server/src/views/"
 }
 
@@ -112,9 +114,11 @@ export default class App {
 	 */
 	private setupRoutes(): void {
 		// Allows us to route directly to files in the 'build' folder
-		this.expressApp.use(
-			express.static(path.join(__dirname, "../../../client/build"))
-		);
+		const clientDir =
+			this.nodeEnv === Settings.testNodeEnv
+				? path.join(__dirname, FilePaths.testEnvBuild)
+				: path.join(__dirname, FilePaths.build);
+		this.expressApp.use(express.static(clientDir));
 
 		// Configure routes
 		this.expressApp.use("/", indexRouter);
