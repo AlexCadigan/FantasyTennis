@@ -1,4 +1,11 @@
 {
-	"exec": "npm run devStart",
-	"ext": "json,pug,ts"
+	"exec": "npm run start --prefix server",
+	"ext": "json,pug,ts,tsx",
+	"ignore": [
+		"**/node_modules",
+		"dist",
+		"server/coverage",
+		"client/build",
+		"tests"
+	]
 }

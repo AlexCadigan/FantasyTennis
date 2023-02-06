@@ -1,9 +1,10 @@
 import createError, { HttpError } from "http-errors";
 import express, { Application, NextFunction, Request, Response } from "express";
 import cookieParser from "cookie-parser";
+import indexRouter from "./routes/index";
 import logger from "morgan";
 import path from "path";
-import Settings from "./Config/Config";
+import Settings from "./config/Config";
 
 //#region Enums
 
@@ -11,7 +12,9 @@ import Settings from "./Config/Config";
  * Application filepaths.
  */
 export enum FilePaths {
-	views = "../../server/views/"
+	build = "../../../client/build",
+	testEnvBuild = "../../client/build",
+	views = "../../../server/src/views/"
 }
 
 //#endregion
@@ -37,7 +40,7 @@ export default class App {
 
 	/**
 	 * Creates an instance of the application.
-	 * @param port Port that the app is running on.
+	 * @param {string} port Port that the app is running on.
 	 */
 	public constructor(port: string) {
 		this.expressApp = express();
@@ -55,7 +58,7 @@ export default class App {
 
 	/**
 	 * Gets the express application object used by the application.
-	 * @returns Express application object.
+	 * @returns {Application} Express application object.
 	 */
 	public getExpressApp(): Application {
 		return this.expressApp;
@@ -63,7 +66,7 @@ export default class App {
 
 	/**
 	 * Gets the port used by the app.
-	 * @returns Port used by the app.
+	 * @returns {string} Port used by the app.
 	 */
 	public getPort(): string {
 		return this.port;
@@ -71,7 +74,7 @@ export default class App {
 
 	/**
 	 * Gets the node environment the app is running in.
-	 * @returns Node environment the app is running in.
+	 * @returns {string} Node environment the app is running in.
 	 */
 	public getNodeEnv(): string {
 		return this.nodeEnv;
@@ -92,6 +95,7 @@ export default class App {
 		this.expressApp.set("view engine", "pug");
 
 		this.initializeMiddleware();
+		this.setupRoutes();
 		this.initializeErrorHandling();
 	}
 
@@ -102,8 +106,22 @@ export default class App {
 		this.expressApp.use(logger("dev"));
 		this.expressApp.use(express.json());
 		this.expressApp.use(express.urlencoded({ extended: false }));
-		this.expressApp.use(express.static(path.join(__dirname, "public")));
 		this.expressApp.use(cookieParser());
+	}
+
+	/**
+	 * Setup Express routes to use for requests/responses from the client.
+	 */
+	private setupRoutes(): void {
+		// Allows us to route directly to files in the 'build' folder
+		const clientDir =
+			this.nodeEnv === Settings.testNodeEnv
+				? path.join(__dirname, FilePaths.testEnvBuild)
+				: path.join(__dirname, FilePaths.build);
+		this.expressApp.use(express.static(clientDir));
+
+		// Configure routes
+		this.expressApp.use("/", indexRouter);
 	}
 
 	/**

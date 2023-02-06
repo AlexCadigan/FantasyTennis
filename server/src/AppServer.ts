@@ -1,7 +1,7 @@
 import { createServer, Server } from "http";
 import App from "./App";
 import { debug } from "console";
-import Settings from "./Config/Config";
+import Settings from "./config/Config";
 
 /**
  * Represents the server the application runs on.
@@ -41,7 +41,7 @@ export default class AppServer {
 
 	/**
 	 * Gets the port the server is running on.
-	 * @returns Port the server is running on.
+	 * @returns {string} Port the server is running on.
 	 */
 	public getPort(): string {
 		return this.port;
@@ -49,7 +49,7 @@ export default class AppServer {
 
 	/**
 	 * Gets the application running on the server.
-	 * @returns Application running on the server.
+	 * @returns {App} Application running on the server.
 	 */
 	public getApp(): App {
 		return this.app;
@@ -57,7 +57,7 @@ export default class AppServer {
 
 	/**
 	 * Gets the HTTP server running.
-	 * @returns HTTP server running.
+	 * @returns {Server} HTTP server running.
 	 */
 	public getServer(): Server {
 		return this.server;
@@ -85,7 +85,7 @@ export default class AppServer {
 	/**
 	 * Event listener for the HTTP server "error" event.  Formats the error into a user-friendly
 	 * message if appropriate.
-	 * @param error Error sent from the server.
+	 * @param {NodeJS.ErrnoException} error Error sent from the server.
 	 */
 	private onError(error: NodeJS.ErrnoException): void {
 		if (error.syscall !== "listen") {

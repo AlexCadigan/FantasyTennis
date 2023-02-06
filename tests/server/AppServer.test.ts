@@ -1,56 +1,40 @@
-import AppServer from "../../server/AppServer";
-import Settings from "../../server/Config/Config";
+import AppServer from "../../server/src/AppServer";
+import Settings from "../../server/src/config/Config";
+
+// Mock server the application is running on
+let mockAppServer!: AppServer;
 
 /**
  * Unit tests for the AppServer class.
  */
-class AppServerTest {
-	//#region Properties
+describe("Test the AppServer class", () => {
+	// Preforms setup necessary for each test
+	beforeEach(() => {
+		mockAppServer = new AppServer();
+	});
 
-	// Mock server the application is running on
-	private mockAppServer!: AppServer;
+	// Verify new instance of the server is constructed correctly
+	it("Constructor initalizes new server object and sets instance variables", () => {
+		expect(mockAppServer.getPort()).toEqual(Settings.port);
+		expect(mockAppServer.getApp()).not.toBeNull();
+		expect(mockAppServer.getServer()).not.toBeNull();
+	});
 
-	//#endregion
+	// Verify the server starts listening
+	it("Constructor starts the server listening", () => {
+		const httpServer = mockAppServer.getServer();
+		const address = httpServer.address();
+		const addressPort =
+			typeof address === "string" ? address : address?.port;
+		const settingPort =
+			typeof address === "string" ? Settings.port : Number(Settings.port);
 
-	//#region Tests
+		expect(httpServer.listening).toBeTruthy();
+		expect(addressPort).toEqual(settingPort);
+	});
 
-	/**
-	 * Runs all unit tests for this class.
-	 */
-	public runTests(): void {
-		describe("Test the AppServer class", () => {
-			// Preforms setup necessary for each test
-			beforeEach(() => {
-				this.mockAppServer = new AppServer();
-			});
-
-			// Verify new instance of the server is constructed correctly
-			it("Constructor initalizes new server object and sets instance variables", () => {
-				expect(this.mockAppServer.getPort()).toEqual(Settings.port);
-				expect(this.mockAppServer.getApp()).not.toBeNull();
-				expect(this.mockAppServer.getServer()).not.toBeNull();
-			});
-
-			// Verify the server starts listening
-			it("Constructor starts the server listening", () => {
-				const httpServer = this.mockAppServer.getServer();
-
-				expect(httpServer.listening).toBeTruthy();
-
-				const address = httpServer.address();
-				typeof address === "string"
-					? expect(address).toEqual(Settings.port)
-					: expect(address?.port).toEqual(Number(Settings.port));
-			});
-
-			// Preforms cleanup actions needed after each test
-			afterEach(() => {
-				this.mockAppServer.getServer().close();
-			});
-		});
-	}
-
-	//#endregion
-}
-
-new AppServerTest().runTests();
+	// Preforms cleanup actions needed after each test
+	afterEach(() => {
+		mockAppServer.getServer().close();
+	});
+});

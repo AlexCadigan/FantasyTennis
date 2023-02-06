@@ -29,9 +29,10 @@
 		"forceConsistentCasingInFileNames": true,
 
 		// Language and Environment
-		"jsx": "react",
+		"jsx": "react-jsx",
 
 		// Projects
 		"composite": true
-	}
+	},
+	"exclude": ["dist", "tests"]
 }

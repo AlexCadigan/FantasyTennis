@@ -1,64 +1,55 @@
-import App, { FilePaths } from "../../server/App";
+import App, { FilePaths } from "../../server/src/App";
 import { Application } from "express";
 import path from "path";
 import request from "supertest";
-import Settings from "../../server/Config/Config";
+import Settings from "../../server/src/config/Config";
+
+// Mock object representing this application
+let mockApp: App;
+
+// Mock object representing the Express application
+let mockExpressApp!: Application;
 
 /**
  * Unit tests for the App class.
  */
-class AppTest {
-	//#region Properties
+describe("Test the App class", () => {
+	// Preforms setup necessary for each test
+	beforeEach(() => {
+		mockApp = new App(Settings.port);
+		mockExpressApp = mockApp.getExpressApp();
+	});
 
-	// Mock object representing this application
-	private mockApp!: App;
+	// Verify new instance of the app is constructed correctly
+	it("Constructor initalizes new Express app object and sets instance variables", () => {
+		expect(mockExpressApp).not.toBeNull();
+		expect(mockApp.getPort()).toEqual(Settings.port);
+		expect(mockApp.getNodeEnv()).toEqual(Settings.testNodeEnv);
+	});
 
-	// Mock object representing the Express application
-	private mockExpressApp!: Application;
+	// Verify new instance of the app is setup correctly
+	it("Constructor sets up Express app correctly", () => {
+		expect(mockExpressApp.get("port")).toEqual(Settings.port);
+		expect(mockExpressApp.get("views")).toEqual(
+			path.join(__dirname, FilePaths.views)
+		);
+		expect(mockExpressApp.get("view engine")).toEqual("pug");
+	});
 
-	//#endregion
+	// Smoke test to verify the index page is returned
+	it("Homepage request returns valid response", async () => {
+		const res = await request(mockExpressApp).get("/");
 
-	//#region Tests
+		expect(res.statusCode).toBe(200);
+		expect(res.type).toBe("text/html");
+	});
 
-	/**
-	 * Runs all unit tests for this class.
-	 */
-	public runTests(): void {
-		describe("Test the App class", () => {
-			// Preforms setup necessary for each test
-			beforeEach(() => {
-				this.mockApp = new App(Settings.port);
-				this.mockExpressApp = this.mockApp.getExpressApp();
-			});
+	// Request for non-existant resource returns 404 error
+	it("Get request for non-existant route returns 404 error", async () => {
+		const res = await request(mockExpressApp).get("/404Error");
 
-			// Verify new instance of the app is constructed correctly
-			it("Constructor initalizes new Express app object and sets instance variables", () => {
-				expect(this.mockExpressApp).not.toBeNull();
-				expect(this.mockApp.getPort()).toEqual(Settings.port);
-				expect(this.mockApp.getNodeEnv()).toEqual(Settings.testNodeEnv);
-			});
+		expect(res.status).toEqual(404);
+	});
 
-			// Verify new instance of the app is setup correctly
-			it("Constructor sets up Express app correctly", () => {
-				expect(this.mockExpressApp.get("port")).toEqual(Settings.port);
-				expect(this.mockExpressApp.get("views")).toEqual(
-					path.join(__dirname, "../", FilePaths.views)
-				);
-				expect(this.mockExpressApp.get("view engine")).toEqual("pug");
-			});
-
-			// Request for non-existant resource returns 404 error
-			it("Get request for non-existant route returns 404 error", async () => {
-				const res = await request(this.mockExpressApp).get("/404Error");
-
-				expect(res.status).toEqual(404);
-			});
-
-			// TODO: Test error handling for other statuses, not just 404 (i.e. 500).  I can't figure out how to mock these.
-		});
-	}
-
-	//#endregion
-}
-
-new AppTest().runTests();
+	// TODO: Test error handling for other statuses, not just 404 (i.e. 500).  I can't figure out how to mock these.
+});
