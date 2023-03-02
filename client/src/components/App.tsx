@@ -9,7 +9,7 @@ export default class App extends React.Component {
 	 * Generate HTML content for the component.
 	 * @returns {JSX.Element} JSX element representing the application.
 	 */
-	override render(): JSX.Element {
+	public override render(): JSX.Element {
 		return <LoginPage></LoginPage>;
 	}
 }
