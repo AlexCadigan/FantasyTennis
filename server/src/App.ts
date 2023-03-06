@@ -3,6 +3,7 @@ import express, { Application, NextFunction, Request, Response } from "express";
 import cookieParser from "cookie-parser";
 import indexRouter from "./routes/index";
 import logger from "morgan";
+import loginRouter from "./routes/Login";
 import path from "path";
 import Settings from "./config/Config";
 
@@ -122,6 +123,7 @@ export default class App {
 
 		// Configure routes
 		this.expressApp.use("/", indexRouter);
+		this.expressApp.use("/", loginRouter);
 	}
 
 	/**
