@@ -1,12 +1,15 @@
 import "./LoginPage.css";
-import React from "react";
+import React, { FormEvent } from "react";
+import APIs from "client/src/util/APIs";
+import resx from "./Resources";
 
 /**
- * Express API requests.
+ * CSS class names used by this component.
  */
-enum ExpressRequests {
-	signIn = "/signIn",
-	signUp = "/signUp"
+enum ClassNames {
+	loginForm = "loginForm",
+	loginPage = "loginPage",
+	noDisp = "noDisp"
 }
 
 /**
@@ -49,33 +52,44 @@ export default class LoginPage extends React.Component<IProps, IState> {
 	 */
 	public override render(): JSX.Element {
 		return (
-			<div className="loginPage">
+			<div className={ClassNames.loginPage}>
 				<p>
 					{this.state.signIn
-						? "Sign in to Fantasy Tennis"
-						: "Create a Fantasy Tennis Account"}
+						? resx.login.signInTitle
+						: resx.login.signUpTitle}
 				</p>
-				<form className="loginForm" onSubmit={this.onSubmitLogin}>
-					<label>Email</label>
+				<form
+					className={ClassNames.loginForm}
+					onSubmit={this.onSubmitLogin}
+				>
+					<label>{resx.login.emailLabel}</label>
 					<input type="text"></input>
-					<label>Password</label>
+					<label>{resx.login.passwordLabel}</label>
 					<input type="text"></input>
-					<label className={this.state.signIn ? "noDisp" : ""}>
-						Repeat password
+					<label
+						className={this.state.signIn ? ClassNames.noDisp : ""}
+					>
+						{resx.login.repeatPasswordLabel}
 					</label>
 					<input
-						className={this.state.signIn ? "noDisp" : ""}
+						className={this.state.signIn ? ClassNames.noDisp : ""}
 						type="text"
 					></input>
 					<input
-						type="button"
-						value={this.state.signIn ? "Sign In" : "Create Account"}
+						type="submit"
+						value={
+							this.state.signIn
+								? resx.login.signInButton
+								: resx.login.signUpButton
+						}
 					></input>
 					<div>
 						<button type="button" onClick={this.onToggleSignIn}>
-							Create an account?
+							{resx.login.signUpLink}
 						</button>
-						<button type="button">Forgot password?</button>
+						<button type="button">
+							{resx.login.forgotPasswordLink}
+						</button>
 					</div>
 				</form>
 			</div>
@@ -91,7 +105,9 @@ export default class LoginPage extends React.Component<IProps, IState> {
 		});
 	}
 
-	private onSubmitLogin(): void {
+	private onSubmitLogin(event: FormEvent): void {
+		event.preventDefault();
+
 		let request: string;
 		const params = new URLSearchParams({
 			email: "test",
@@ -99,12 +115,14 @@ export default class LoginPage extends React.Component<IProps, IState> {
 		});
 
 		if (this.state.signIn) {
-			request = ExpressRequests.signIn;
+			request = APIs.signIn;
 		} else {
-			request = ExpressRequests.signIn;
+			request = APIs.signIn;
 			params.append("repeatPassword", "test");
 		}
 
-		fetch(request + params);
+		console.log("In React");
+
+		fetch(request + "?" + params).then((response) => response.json());
 	}
 }
