@@ -1,6 +1,7 @@
 import "./LoginPage.css";
-import React, { FormEvent } from "react";
+import React, { ChangeEvent, FormEvent } from "react";
 import APIs from "client/src/util/APIs";
+import { buildRequestParams } from "client/src/util/StringBuilder";
 import resx from "./Resources";
 
 /**
@@ -21,8 +22,10 @@ interface IProps {}
  * State properties used by this component.
  */
 interface IState {
-	// True if in sign in mode, false if in sign up mode
-	signIn: boolean;
+	emailValue: string; // User-entered email address
+	passwordValue: string; // User-entered password
+	repeatPasswordValue: string; // Repeat password entered by user
+	signIn: boolean; // True if in sign in mode, false if in sign up mode
 }
 
 /**
@@ -38,12 +41,11 @@ export default class LoginPage extends React.Component<IProps, IState> {
 
 		// Initialize state
 		this.state = {
+			emailValue: "",
+			passwordValue: "",
+			repeatPasswordValue: "",
 			signIn: true
 		};
-
-		// Register handlers
-		this.onToggleSignIn = this.onToggleSignIn.bind(this);
-		this.onSubmitLogin = this.onSubmitLogin.bind(this);
 	}
 
 	/**
@@ -63,9 +65,9 @@ export default class LoginPage extends React.Component<IProps, IState> {
 					onSubmit={this.onSubmitLogin}
 				>
 					<label>{resx.login.emailLabel}</label>
-					<input type="text"></input>
+					<input type="text" onChange={this.onEmailChange}></input>
 					<label>{resx.login.passwordLabel}</label>
-					<input type="text"></input>
+					<input type="text" onChange={this.onPasswordChange}></input>
 					<label
 						className={this.state.signIn ? ClassNames.noDisp : ""}
 					>
@@ -74,6 +76,7 @@ export default class LoginPage extends React.Component<IProps, IState> {
 					<input
 						className={this.state.signIn ? ClassNames.noDisp : ""}
 						type="text"
+						onChange={this.onRepeatPasswordChange}
 					></input>
 					<input
 						type="submit"
@@ -97,32 +100,70 @@ export default class LoginPage extends React.Component<IProps, IState> {
 	}
 
 	/**
+	 * Called when the email input field changes.
+	 * @param {ChangeEvent<HTMLInputElement>} event Input change event.
+	 */
+	private onEmailChange = (event: ChangeEvent<HTMLInputElement>): void => {
+		this.setState({
+			emailValue: event.target.value
+		});
+	};
+
+	/**
+	 * Called when the password input field changes.
+	 * @param {ChangeEvent<HTMLInputElement>} event Input change event.
+	 */
+	private onPasswordChange = (event: ChangeEvent<HTMLInputElement>): void => {
+		this.setState({
+			passwordValue: event.target.value
+		});
+	};
+
+	/**
+	 * Called when the repeat password input field changes.
+	 * @param {ChangeEvent<HTMLInputElement>} event Input change event.
+	 */
+	private onRepeatPasswordChange = (
+		event: ChangeEvent<HTMLInputElement>
+	): void => {
+		this.setState({
+			repeatPasswordValue: event.target.value
+		});
+	};
+
+	/**
 	 * Switches between sign in mode, for existing users, and sign up mode, for new users.
 	 */
-	private onToggleSignIn(): void {
+	private onToggleSignIn = (): void => {
 		this.setState({
 			signIn: !this.state.signIn
 		});
-	}
+	};
 
-	private onSubmitLogin(event: FormEvent): void {
+	/**
+	 * Called when the login form submits.  Signs in / signs up a user.
+	 * @param {FormEvent<HTMLFormElement>} event Form submit event.
+	 */
+	private onSubmitLogin = (event: FormEvent<HTMLFormElement>): void => {
+		// Prevent page refresh that happens on submit
 		event.preventDefault();
 
-		let request: string;
-		const params = new URLSearchParams({
-			email: "test",
-			password: "test"
+		let req: string;
+		const reqParams = new URLSearchParams({
+			email: this.state.emailValue,
+			password: this.state.passwordValue
 		});
 
+		// Build request based on what state the page is in
 		if (this.state.signIn) {
-			request = APIs.signIn;
+			req = APIs.signIn;
 		} else {
-			request = APIs.signIn;
-			params.append("repeatPassword", "test");
+			req = APIs.signUp;
+			reqParams.append("repeatPassword", this.state.repeatPasswordValue);
 		}
 
-		console.log("In React");
-
-		fetch(request + "?" + params).then((response) => response.json());
-	}
+		fetch(buildRequestParams(req, reqParams)).then((response) =>
+			response.json()
+		);
+	};
 }
