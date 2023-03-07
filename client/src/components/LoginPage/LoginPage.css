@@ -1,4 +1,4 @@
-/* Div containing login page.  */
+/* Div containing login page. */
 .loginPage {
 	align-items: center;
 	display: flex;
@@ -11,6 +11,7 @@
 	flex-direction: column;
 }
 
+/* Hides an element in the UI. */
 .noDisp {
 	display: none;
 }
