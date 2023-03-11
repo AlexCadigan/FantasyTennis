@@ -1,7 +1,8 @@
 /**
  * String resources used by the application.
  */
-export default {
+export const resx = {
+	tabTitle: "Fantasy Tennis", // Title shown in the browser tab for the website
 	// Sign in / sign up page
 	login: {
 		emailLabel: "Email", // Label for email input
@@ -15,3 +16,22 @@ export default {
 		signUpTitle: "Create a Fantasy Tennis Account" // Title that appears when user is signing up
 	}
 };
+
+/**
+ * Builds a resource string and replaces wildcards with the given values.
+ * @param {string} resource Resource string.
+ * @param {string[]} values Values to replace wildcards with.
+ * @returns {string} Resource string with wildcards replaced.
+ */
+export function buildResource(resource: string, ...values: string[]): string {
+	// Replace wildcards in the resource with given values
+	for (let i = 0; i < values.length; i++) {
+		const value = values[i];
+
+		if (value !== undefined) {
+			resource.replace("{{" + i + "}}", value);
+		}
+	}
+
+	return resource;
+}

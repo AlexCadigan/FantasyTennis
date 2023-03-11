@@ -1,8 +1,8 @@
 import "./LoginPage.css";
+import "../AppStyles.css";
+import { APIs, buildRequestParams } from "client/src/util/APIs";
 import React, { ChangeEvent, FormEvent } from "react";
-import APIs from "client/src/util/APIs";
-import { buildRequestParams } from "client/src/util/StringBuilder";
-import resx from "./Resources";
+import { resx } from "../../Resources/Resources";
 
 /**
  * CSS class names used by this component.
