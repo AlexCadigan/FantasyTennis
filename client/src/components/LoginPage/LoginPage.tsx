@@ -1,8 +1,18 @@
 import "./LoginPage.css";
-import "../AppStyles.css";
 import { APIs, buildRequestParams } from "client/src/util/APIs";
 import React, { ChangeEvent, FormEvent } from "react";
 import { resx } from "../../Resources/Resources";
+
+//#region Enums
+
+/**
+ * HTML element IDs used by this component.
+ */
+enum ElementIDs {
+	email = "emailInput",
+	password = "passwordInput",
+	repeatPassword = "repeatPasswordInput"
+}
 
 /**
  * CSS class names used by this component.
@@ -12,6 +22,8 @@ enum ClassNames {
 	loginPage = "loginPage",
 	noDisp = "noDisp"
 }
+
+//#endregion
 
 /**
  * Properties used by this component.
@@ -64,16 +76,32 @@ export default class LoginPage extends React.Component<IProps, IState> {
 					className={ClassNames.loginForm}
 					onSubmit={this.onSubmitLogin}
 				>
-					<label>{resx.login.emailLabel}</label>
-					<input type="text" onChange={this.onEmailChange}></input>
-					<label>{resx.login.passwordLabel}</label>
-					<input type="text" onChange={this.onPasswordChange}></input>
+					<label htmlFor={ElementIDs.email}>
+						{resx.login.emailLabel}
+					</label>
+					<input
+						id={ElementIDs.email}
+						type="text"
+						onBlur={this.onEmailBlur}
+						onChange={this.onEmailChange}
+					></input>
+					<label className={ClassNames.noDisp}></label>
+					<label htmlFor={ElementIDs.password}>
+						{resx.login.passwordLabel}
+					</label>
+					<input
+						id={ElementIDs.password}
+						type="text"
+						onChange={this.onPasswordChange}
+					></input>
 					<label
 						className={this.state.signIn ? ClassNames.noDisp : ""}
+						htmlFor={ElementIDs.repeatPassword}
 					>
 						{resx.login.repeatPasswordLabel}
 					</label>
 					<input
+						id={ElementIDs.repeatPassword}
 						className={this.state.signIn ? ClassNames.noDisp : ""}
 						type="text"
 						onChange={this.onRepeatPasswordChange}
@@ -98,6 +126,8 @@ export default class LoginPage extends React.Component<IProps, IState> {
 			</div>
 		);
 	}
+
+	//#region On change handlers
 
 	/**
 	 * Called when the email input field changes.
@@ -130,6 +160,17 @@ export default class LoginPage extends React.Component<IProps, IState> {
 			repeatPasswordValue: event.target.value
 		});
 	};
+
+	//#endregion
+
+	/**
+	 * Called when the email input field loses focus.
+	 */
+	private onEmailBlur = (): void => {
+		this.isValidEmail();
+	};
+
+	//#region Button handlers
 
 	/**
 	 * Switches between sign in mode, for existing users, and sign up mode, for new users.
@@ -166,4 +207,14 @@ export default class LoginPage extends React.Component<IProps, IState> {
 			response.json()
 		);
 	};
+
+	//#endregion
+
+	//#region Validation
+
+	private isValidEmail(): boolean {
+		return false;
+	}
+
+	//#endregion
 }
