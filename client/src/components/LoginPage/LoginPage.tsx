@@ -35,6 +35,7 @@ interface IProps {}
  */
 interface IState {
 	emailValue: string; // User-entered email address
+	emailValidation: string; // Message shown when email is invalid
 	passwordValue: string; // User-entered password
 	repeatPasswordValue: string; // Repeat password entered by user
 	signIn: boolean; // True if in sign in mode, false if in sign up mode
@@ -54,6 +55,7 @@ export default class LoginPage extends React.Component<IProps, IState> {
 		// Initialize state
 		this.state = {
 			emailValue: "",
+			emailValidation: "",
 			passwordValue: "",
 			repeatPasswordValue: "",
 			signIn: true
@@ -85,7 +87,15 @@ export default class LoginPage extends React.Component<IProps, IState> {
 						onBlur={this.onEmailBlur}
 						onChange={this.onEmailChange}
 					></input>
-					<label className={ClassNames.noDisp}></label>
+					<label
+						className={
+							this.state.emailValidation == ""
+								? ClassNames.noDisp
+								: ""
+						}
+					>
+						{this.state.emailValidation}
+					</label>
 					<label htmlFor={ElementIDs.password}>
 						{resx.login.passwordLabel}
 					</label>
@@ -167,7 +177,10 @@ export default class LoginPage extends React.Component<IProps, IState> {
 	 * Called when the email input field loses focus.
 	 */
 	private onEmailBlur = (): void => {
-		this.isValidEmail();
+		const validationMessage = this.isValidEmail() ? "" : "Email is invalid";
+		this.setState({
+			emailValidation: validationMessage
+		});
 	};
 
 	//#region Button handlers
@@ -212,8 +225,13 @@ export default class LoginPage extends React.Component<IProps, IState> {
 
 	//#region Validation
 
+	/**
+	 * Determines if the email address is valid.
+	 * @returns {boolean} True if the email address is valid, false if it's invalid.
+	 */
 	private isValidEmail(): boolean {
-		return false;
+		const validEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		return validEmailRegex.test(this.state.emailValue);
 	}
 
 	//#endregion
