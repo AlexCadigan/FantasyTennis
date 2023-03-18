@@ -1,4 +1,5 @@
-import LoginPage from "./LoginPage/LoginPage";
+import "./AppStyles.css";
+import LoginPage from "./UserAuthentication/LoginPage";
 import React from "react";
 import { resx } from "../Resources/Resources";
 

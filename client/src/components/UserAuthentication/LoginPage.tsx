@@ -1,15 +1,18 @@
 import "./LoginPage.css";
 import { APIs, buildRequestParams } from "client/src/util/APIs";
-import React, { ChangeEvent, FormEvent } from "react";
+import React, {
+	ChangeEvent,
+	ChangeEventHandler,
+	FocusEventHandler,
+	FormEvent
+} from "react";
+import EmailField from "./EmailField";
 import { resx } from "../../Resources/Resources";
-
-//#region Enums
 
 /**
  * HTML element IDs used by this component.
  */
 enum ElementIDs {
-	email = "emailInput",
 	password = "passwordInput",
 	repeatPassword = "repeatPasswordInput"
 }
@@ -18,12 +21,10 @@ enum ElementIDs {
  * CSS class names used by this component.
  */
 enum ClassNames {
-	loginForm = "loginForm",
+	flexColumn = "flexColumn",
 	loginPage = "loginPage",
 	noDisp = "noDisp"
 }
-
-//#endregion
 
 /**
  * Properties used by this component.
@@ -34,8 +35,6 @@ interface IProps {}
  * State properties used by this component.
  */
 interface IState {
-	emailValue: string; // User-entered email address
-	emailValidation: string; // Message shown when email is invalid
 	passwordValue: string; // User-entered password
 	repeatPasswordValue: string; // Repeat password entered by user
 	signIn: boolean; // True if in sign in mode, false if in sign up mode
@@ -54,8 +53,6 @@ export default class LoginPage extends React.Component<IProps, IState> {
 
 		// Initialize state
 		this.state = {
-			emailValue: "",
-			emailValidation: "",
 			passwordValue: "",
 			repeatPasswordValue: "",
 			signIn: true
@@ -75,47 +72,21 @@ export default class LoginPage extends React.Component<IProps, IState> {
 						: resx.login.signUpTitle}
 				</p>
 				<form
-					className={ClassNames.loginForm}
+					className={ClassNames.flexColumn}
 					onSubmit={this.onSubmitLogin}
 				>
-					<label htmlFor={ElementIDs.email}>
-						{resx.login.emailLabel}
-					</label>
-					<input
-						id={ElementIDs.email}
-						type="text"
-						onBlur={this.onEmailBlur}
-						onChange={this.onEmailChange}
-					></input>
-					<label
-						className={
-							this.state.emailValidation == ""
-								? ClassNames.noDisp
-								: ""
-						}
-					>
-						{this.state.emailValidation}
-					</label>
-					<label htmlFor={ElementIDs.password}>
-						{resx.login.passwordLabel}
-					</label>
-					<input
-						id={ElementIDs.password}
-						type="text"
-						onChange={this.onPasswordChange}
-					></input>
-					<label
-						className={this.state.signIn ? ClassNames.noDisp : ""}
-						htmlFor={ElementIDs.repeatPassword}
-					>
-						{resx.login.repeatPasswordLabel}
-					</label>
-					<input
-						id={ElementIDs.repeatPassword}
-						className={this.state.signIn ? ClassNames.noDisp : ""}
-						type="text"
-						onChange={this.onRepeatPasswordChange}
-					></input>
+					<EmailField></EmailField>
+					{this.createTextField(
+						ElementIDs.password,
+						resx.login.passwordLabel,
+						this.onPasswordChange
+					)}
+					{this.createTextField(
+						ElementIDs.repeatPassword,
+						resx.login.repeatPasswordLabel,
+						this.onRepeatPasswordChange,
+						this.state.signIn
+					)}
 					<input
 						type="submit"
 						value={
@@ -125,29 +96,56 @@ export default class LoginPage extends React.Component<IProps, IState> {
 						}
 					></input>
 					<div>
-						<button type="button" onClick={this.onToggleSignIn}>
+						<button onClick={this.onToggleSignIn}>
 							{resx.login.signUpLink}
 						</button>
-						<button type="button">
-							{resx.login.forgotPasswordLink}
-						</button>
+						<button>{resx.login.forgotPasswordLink}</button>
 					</div>
 				</form>
 			</div>
 		);
 	}
 
-	//#region On change handlers
+	//#region JXS helpers
 
 	/**
-	 * Called when the email input field changes.
-	 * @param {ChangeEvent<HTMLInputElement>} event Input change event.
+	 * Creates a text field comprised of a label/input pair.
+	 * @param {string} elementID Input element ID.
+	 * @param {string} label Text to show for field label.
+	 * @param {ChangeEventHandler<HTMLInputElement>} onChange Function called when input element text changes.
+	 * @param {boolean} hidden True if the field should be hidden, false if it should be shown (default is false).
+	 * @param {FocusEventHandler<HTMLInputElement>} onBlur Function called when focus leaves the input element.
+	 * @returns {JSX.Element} Text field comprised of label/input pair.
 	 */
-	private onEmailChange = (event: ChangeEvent<HTMLInputElement>): void => {
-		this.setState({
-			emailValue: event.target.value
-		});
-	};
+	private createTextField(
+		elementID: string,
+		label: string,
+		onChange: ChangeEventHandler<HTMLInputElement>,
+		hidden = false,
+		onBlur?: FocusEventHandler<HTMLInputElement>
+	): JSX.Element {
+		return (
+			<div className={ClassNames.flexColumn}>
+				<label
+					className={hidden ? ClassNames.noDisp : ""}
+					htmlFor={elementID}
+				>
+					{label}
+				</label>
+				<input
+					id={elementID}
+					className={hidden ? ClassNames.noDisp : ""}
+					type="text"
+					onBlur={onBlur}
+					onChange={onChange}
+				></input>
+			</div>
+		);
+	}
+
+	//#endregion
+
+	//#region On change handlers
 
 	/**
 	 * Called when the password input field changes.
@@ -173,16 +171,6 @@ export default class LoginPage extends React.Component<IProps, IState> {
 
 	//#endregion
 
-	/**
-	 * Called when the email input field loses focus.
-	 */
-	private onEmailBlur = (): void => {
-		const validationMessage = this.isValidEmail() ? "" : "Email is invalid";
-		this.setState({
-			emailValidation: validationMessage
-		});
-	};
-
 	//#region Button handlers
 
 	/**
@@ -204,7 +192,6 @@ export default class LoginPage extends React.Component<IProps, IState> {
 
 		let req: string;
 		const reqParams = new URLSearchParams({
-			email: this.state.emailValue,
 			password: this.state.passwordValue
 		});
 
@@ -220,19 +207,6 @@ export default class LoginPage extends React.Component<IProps, IState> {
 			response.json()
 		);
 	};
-
-	//#endregion
-
-	//#region Validation
-
-	/**
-	 * Determines if the email address is valid.
-	 * @returns {boolean} True if the email address is valid, false if it's invalid.
-	 */
-	private isValidEmail(): boolean {
-		const validEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		return validEmailRegex.test(this.state.emailValue);
-	}
 
 	//#endregion
 }

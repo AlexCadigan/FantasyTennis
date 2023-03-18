@@ -4,9 +4,3 @@
 	display: flex;
 	flex-direction: column;
 }
-
-/* Form containing login fields. */
-.loginForm {
-	display: flex;
-	flex-direction: column;
-}

@@ -1,0 +1,10 @@
+/* Hides an element in the UI. */
+.noDisp {
+	display: none;
+}
+
+/* Style elements in a flex column format. */
+.flexColumn {
+	display: flex;
+	flex-direction: column;
+}
