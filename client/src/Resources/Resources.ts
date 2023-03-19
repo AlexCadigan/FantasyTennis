@@ -4,9 +4,10 @@
 export const resx = {
 	tabTitle: "Fantasy Tennis", // Title shown in the browser tab for the website
 	// Sign in / sign up page
-	login: {
+	userAuthentication: {
 		emailLabel: "Email", // Label for email input
 		forgotPasswordLink: "Forgot password?", // Label for the forgot password link
+		invalidEmail: "Invalid email", // Warning that appears when an invalid email is entered
 		passwordLabel: "Password", // Label for password input
 		repeatPasswordLabel: "Repeat password", // Label for repeat password input
 		signInButton: "Sign In", // Label for the sign in button
