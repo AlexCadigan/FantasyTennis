@@ -6,24 +6,22 @@ import React, {
 	FocusEventHandler,
 	FormEvent
 } from "react";
-import EmailField from "./EmailField";
+import InputField from "./InputField";
 import { resx } from "../../Resources/Resources";
 
 /**
  * HTML element IDs used by this component.
  */
 enum ElementIDs {
-	password = "passwordInput",
-	repeatPassword = "repeatPasswordInput"
+	email = "emailInput",
+	password = "passwordInput"
 }
 
 /**
  * CSS class names used by this component.
  */
 enum ClassNames {
-	flexColumn = "flexColumn",
-	loginPage = "loginPage",
-	noDisp = "noDisp"
+	signInPage = "authenticationPage"
 }
 
 /**
@@ -44,6 +42,8 @@ interface IState {
  * User login page.  Handles existing users signing up or new users registering.
  */
 export default class LoginPage extends React.Component<IProps, IState> {
+	private emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 	/**
 	 * Creates an instance of this component and initalizes state properties.
 	 * @param {IProps} props Properties used by this component.
@@ -65,7 +65,7 @@ export default class LoginPage extends React.Component<IProps, IState> {
 	 */
 	public override render(): JSX.Element {
 		return (
-			<div className={ClassNames.loginPage}>
+			<div className={ClassNames.signInPage}>
 				<p>
 					{this.state.signIn
 						? resx.login.signInTitle
@@ -75,12 +75,17 @@ export default class LoginPage extends React.Component<IProps, IState> {
 					className={ClassNames.flexColumn}
 					onSubmit={this.onSubmitLogin}
 				>
-					<EmailField></EmailField>
-					{this.createTextField(
-						ElementIDs.password,
-						resx.login.passwordLabel,
-						this.onPasswordChange
-					)}
+					<InputField
+						ID={ElementIDs.email}
+						label={resx.login.emailLabel}
+						validateInput={true}
+						validationRegex={this.emailRegex}
+						invalidMessage={resx.login.invalidEmail}
+					></InputField>
+					<InputField
+						ID={ElementIDs.password}
+						label={resx.login.passwordLabel}
+					></InputField>
 					{this.createTextField(
 						ElementIDs.repeatPassword,
 						resx.login.repeatPasswordLabel,
@@ -147,14 +152,11 @@ export default class LoginPage extends React.Component<IProps, IState> {
 
 	//#region On change handlers
 
-	/**
-	 * Called when the password input field changes.
-	 * @param {ChangeEvent<HTMLInputElement>} event Input change event.
-	 */
-	private onPasswordChange = (event: ChangeEvent<HTMLInputElement>): void => {
-		this.setState({
-			passwordValue: event.target.value
-		});
+	private onElementBlur = (): void => {
+		const test = "test";
+		if (test) {
+			console.log("test");
+		}
 	};
 
 	/**
