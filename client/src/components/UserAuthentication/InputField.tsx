@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from "react";
-import { AppStyles } from "../App";
+import { ClassNames } from "./AuthenticationPage";
 
 /**
  * Properties used by this component.
@@ -47,7 +47,7 @@ export default class InputField extends React.Component<
 	 */
 	public override render(): JSX.Element {
 		return (
-			<div className={AppStyles.flexColumn}>
+			<div className={ClassNames.formElement}>
 				<label htmlFor={this.props.ID}>{this.props.label}</label>
 				<input
 					id={this.props.ID}
@@ -74,7 +74,7 @@ export default class InputField extends React.Component<
 		}
 
 		return (
-			<label className={this.state.validValue ? AppStyles.noDisp : ""}>
+			<label className={this.state.validValue ? ClassNames.noDisp : ""}>
 				{this.props.invalidMessage}
 			</label>
 		);
