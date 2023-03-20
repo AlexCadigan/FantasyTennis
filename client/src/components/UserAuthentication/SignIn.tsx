@@ -1,6 +1,8 @@
+import { AppRoutes } from "../App";
 import AuthenticationPage from "./AuthenticationPage";
 import { FormEvent } from "react";
 import InputField from "./InputField";
+import { Link } from "react-router-dom";
 import { resx } from "client/src/Resources/Resources";
 
 /**
@@ -32,7 +34,16 @@ export default class SignIn extends AuthenticationPage {
 	 * @returns {JSX.Element} Additional buttons to display in the form.
 	 */
 	protected buildFormButtons(): JSX.Element {
-		return <button>{resx.userAuthentication.signUpLink}</button>;
+		return (
+			<div>
+				<Link to={AppRoutes.signUp}>
+					{resx.userAuthentication.signUpLink}
+				</Link>
+				<Link to={AppRoutes.resetPassword}>
+					{resx.userAuthentication.forgotPasswordLink}
+				</Link>
+			</div>
+		);
 	}
 
 	/**
