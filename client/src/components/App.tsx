@@ -1,7 +1,7 @@
-import "./AppStyles.css";
-import LoginPage from "./UserAuthentication/LoginPage";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import React from "react";
 import { resx } from "../Resources/Resources";
+import SignUp from "./UserAuthentication/SignUp";
 
 /**
  * Main component class representing the application.
@@ -19,6 +19,22 @@ export default class App extends React.Component {
 	 * @returns {JSX.Element} JSX element representing the application.
 	 */
 	public override render(): JSX.Element {
-		return <LoginPage></LoginPage>;
+		return (
+			<BrowserRouter>
+				<Routes>
+					<Route
+						path="/"
+						element={
+							<SignUp
+								pageTitle={resx.userAuthentication.signUpTitle}
+								submitButtonText={
+									resx.userAuthentication.signUpButton
+								}
+							></SignUp>
+						}
+					></Route>
+				</Routes>
+			</BrowserRouter>
+		);
 	}
 }
