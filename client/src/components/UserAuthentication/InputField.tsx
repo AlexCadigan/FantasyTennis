@@ -95,7 +95,8 @@ export default class InputField extends React.Component<
 	 */
 	private onInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
 		this.setState({
-			value: event.target.value
+			value: event.target.value,
+			validValue: true // Make sure validation message isn't showing once user resumes typing
 		});
 	};
 
