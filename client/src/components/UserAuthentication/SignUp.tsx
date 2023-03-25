@@ -30,7 +30,7 @@ export default class SignUp extends AuthenticationPage {
 				></InputField>
 				<InputField
 					ID={ElementIDs.repeatPassword}
-					label={resx.userAuthentication.repeatPasswordLabel}
+					label={resx.userAuthentication.signUp.repeatPasswordLabel}
 				></InputField>
 			</div>
 		);
@@ -43,7 +43,7 @@ export default class SignUp extends AuthenticationPage {
 	protected buildFormButtons(): JSX.Element {
 		return (
 			<Link to={AppRoutes.signIn}>
-				{resx.userAuthentication.signInLink}
+				{resx.userAuthentication.signUp.signInLink}
 			</Link>
 		);
 	}

@@ -34,9 +34,9 @@ export default class App extends React.Component {
 						path={AppRoutes.signIn}
 						element={
 							<SignIn
-								pageTitle={resx.userAuthentication.signInTitle}
+								pageTitle={resx.userAuthentication.signIn.title}
 								submitButtonText={
-									resx.userAuthentication.signInButton
+									resx.userAuthentication.signIn.submitButton
 								}
 							></SignIn>
 						}
@@ -45,9 +45,9 @@ export default class App extends React.Component {
 						path={AppRoutes.signUp}
 						element={
 							<SignUp
-								pageTitle={resx.userAuthentication.signUpTitle}
+								pageTitle={resx.userAuthentication.signUp.title}
 								submitButtonText={
-									resx.userAuthentication.signUpButton
+									resx.userAuthentication.signUp.submitButton
 								}
 							></SignUp>
 						}
@@ -56,8 +56,13 @@ export default class App extends React.Component {
 						path={AppRoutes.resetPassword}
 						element={
 							<ResetPassword
-								pageTitle={""}
-								submitButtonText={""}
+								pageTitle={
+									resx.userAuthentication.resetPassword.title
+								}
+								submitButtonText={
+									resx.userAuthentication.resetPassword
+										.submitButton
+								}
 							></ResetPassword>
 						}
 					></Route>

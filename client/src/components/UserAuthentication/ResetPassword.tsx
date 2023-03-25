@@ -23,7 +23,7 @@ export default class SignUp extends AuthenticationPage {
 	protected buildFormButtons(): JSX.Element {
 		return (
 			<Link to={AppRoutes.signIn}>
-				{resx.userAuthentication.backToSignInLink}
+				{resx.userAuthentication.resetPassword.backToSignInLink}
 			</Link>
 		);
 	}

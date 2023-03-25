@@ -37,10 +37,10 @@ export default class SignIn extends AuthenticationPage {
 		return (
 			<div>
 				<Link to={AppRoutes.signUp}>
-					{resx.userAuthentication.signUpLink}
+					{resx.userAuthentication.signIn.signUpLink}
 				</Link>
 				<Link to={AppRoutes.resetPassword}>
-					{resx.userAuthentication.forgotPasswordLink}
+					{resx.userAuthentication.signIn.forgotPasswordLink}
 				</Link>
 			</div>
 		);
