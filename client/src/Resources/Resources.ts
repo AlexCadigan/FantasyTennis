@@ -6,6 +6,7 @@ export const resx = {
 	userAuthentication: {
 		emailGhostText: "Enter email", // Ghost text that appears in the email input
 		emailLabel: "Email address", // Label for email input
+		headerTitle: "Fantasy Tennis", // Title that appears in header before a user is logged in
 		invalidEmail: "Invalid email", // Warning that appears when an invalid email is entered
 		passwordLabel: "Password", // Label for password input
 		signIn: {

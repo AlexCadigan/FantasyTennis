@@ -1,6 +1,7 @@
 import { Button, Form } from "react-bootstrap";
 import React, { FormEventHandler } from "react";
 import { ClassNames } from "../AppStyles";
+import Header from "./Header";
 import InputField from "./InputField";
 import { resx } from "../../Resources/Resources";
 
@@ -40,24 +41,29 @@ export default abstract class AuthenticationPage extends React.Component<
 	 */
 	public override render(): JSX.Element {
 		return (
-			<div className={[ClassNames.flex, ClassNames.center].join(" ")}>
-				<Form onSubmit={this.onFormSubmit}>
-					<Form.Label>
-						<h1>{this.props.pageTitle}</h1>
-					</Form.Label>
-					<InputField
-						ID={ElementIDs.email}
-						label={resx.userAuthentication.emailLabel}
-						validateInput={true}
-						validationRegex={this.emailRegex}
-						invalidMessage={resx.userAuthentication.invalidEmail}
-					></InputField>
-					{this.buildFormElements()}
-					<Button variant="primary" type="submit">
-						{this.props.submitButtonText}
-					</Button>
-					{this.buildFormButtons()}
-				</Form>
+			<div>
+				<Header></Header>
+				<div className={[ClassNames.flex, ClassNames.center].join(" ")}>
+					<Form onSubmit={this.onFormSubmit}>
+						<Form.Label>
+							<h1>{this.props.pageTitle}</h1>
+						</Form.Label>
+						<InputField
+							ID={ElementIDs.email}
+							label={resx.userAuthentication.emailLabel}
+							validateInput={true}
+							validationRegex={this.emailRegex}
+							invalidMessage={
+								resx.userAuthentication.invalidEmail
+							}
+						></InputField>
+						{this.buildFormElements()}
+						<Button variant="primary" type="submit">
+							{this.props.submitButtonText}
+						</Button>
+						{this.buildFormButtons()}
+					</Form>
+				</div>
 			</div>
 		);
 	}
