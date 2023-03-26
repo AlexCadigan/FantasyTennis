@@ -4,7 +4,8 @@
 export const resx = {
 	tabTitle: "Fantasy Tennis", // Title shown in the browser tab for the website
 	userAuthentication: {
-		emailLabel: "Email", // Label for email input
+		emailGhostText: "Enter email", // Ghost text that appears in the email input
+		emailLabel: "Email address", // Label for email input
 		invalidEmail: "Invalid email", // Warning that appears when an invalid email is entered
 		passwordLabel: "Password", // Label for password input
 		signIn: {

@@ -1,5 +1,7 @@
 import React, { ChangeEvent } from "react";
-import { ClassNames } from "./AuthenticationPage";
+import { ClassNames } from "../AppStyles";
+import { Form } from "react-bootstrap";
+import { resx } from "../../Resources/Resources";
 
 /**
  * Properties used by this component.
@@ -47,20 +49,24 @@ export default class InputField extends React.Component<
 	 */
 	public override render(): JSX.Element {
 		return (
-			<div className={ClassNames.formElement}>
-				<label htmlFor={this.props.ID}>{this.props.label}</label>
-				<input
+			<Form.Group>
+				<Form.Label htmlFor={this.props.ID}>
+					{this.props.label}
+				</Form.Label>
+				<Form.Control
 					id={this.props.ID}
-					type="text"
+					type="email"
+					placeholder={resx.userAuthentication.emailGhostText}
+					value={this.state.value}
+					onChange={this.onInputChange}
 					onBlur={
 						this.props.validateInput
 							? this.onElementBlur
 							: undefined
 					}
-					onChange={this.onInputChange}
-				></input>
+				/>
 				{this.buildValidationLabel()}
-			</div>
+			</Form.Group>
 		);
 	}
 
@@ -74,9 +80,11 @@ export default class InputField extends React.Component<
 		}
 
 		return (
-			<label className={this.state.validValue ? ClassNames.noDisp : ""}>
+			<Form.Text
+				className={this.state.validValue ? ClassNames.noDisp : ""}
+			>
 				{this.props.invalidMessage}
-			</label>
+			</Form.Text>
 		);
 	}
 

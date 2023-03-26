@@ -1,5 +1,6 @@
-import "./AuthenticationPage.css";
+import { Button, Form } from "react-bootstrap";
 import React, { FormEventHandler } from "react";
+import { ClassNames } from "../AppStyles";
 import InputField from "./InputField";
 import { resx } from "../../Resources/Resources";
 
@@ -8,15 +9,6 @@ import { resx } from "../../Resources/Resources";
  */
 enum ElementIDs {
 	email = "emailInput"
-}
-
-/**
- * CSS class names used by this component.
- */
-export enum ClassNames {
-	authenticationPage = "authenticationPage",
-	formElement = "formElement",
-	noDisp = "noDisp"
 }
 
 /**
@@ -43,25 +35,16 @@ export default abstract class AuthenticationPage extends React.Component<
 	private emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 	/**
-	 * Creates an instance of this component and initalizes state properties.
-	 * @param {IAuthenticationPageProps} props Properties used by this component.
-	 */
-	public constructor(props: IAuthenticationPageProps) {
-		super(props);
-	}
-
-	/**
 	 * Generate HTML content for the component.
 	 * @returns {JSX.Element} User authentication page.
 	 */
 	public override render(): JSX.Element {
 		return (
-			<div className={ClassNames.authenticationPage}>
-				<p>{this.props.pageTitle}</p>
-				<form
-					className={ClassNames.formElement}
-					onSubmit={this.onFormSubmit}
-				>
+			<div className={[ClassNames.flex, ClassNames.center].join(" ")}>
+				<Form onSubmit={this.onFormSubmit}>
+					<Form.Label>
+						<h1>{this.props.pageTitle}</h1>
+					</Form.Label>
 					<InputField
 						ID={ElementIDs.email}
 						label={resx.userAuthentication.emailLabel}
@@ -70,12 +53,11 @@ export default abstract class AuthenticationPage extends React.Component<
 						invalidMessage={resx.userAuthentication.invalidEmail}
 					></InputField>
 					{this.buildFormElements()}
-					<input
-						type="submit"
-						value={this.props.submitButtonText}
-					></input>
+					<Button variant="primary" type="submit">
+						{this.props.submitButtonText}
+					</Button>
 					{this.buildFormButtons()}
-				</form>
+				</Form>
 			</div>
 		);
 	}
