@@ -1,6 +1,14 @@
+import "./Header.css";
 import { Container, Navbar } from "react-bootstrap";
 import React from "react";
 import { resx } from "client/src/Resources/Resources";
+
+/**
+ * CSS class names used by this app.
+ */
+enum ClassNames {
+	header = "header"
+}
 
 /**
  * Properties used by this component.
@@ -25,11 +33,9 @@ export default class Header extends React.Component<
 	 */
 	public override render(): JSX.Element {
 		return (
-			<Navbar bg="primary" variant="dark">
+			<Navbar className={ClassNames.header}>
 				<Container>
-					<Navbar.Brand>
-						{resx.userAuthentication.headerTitle}
-					</Navbar.Brand>
+					<Navbar.Brand>{resx.tabTitle}</Navbar.Brand>
 				</Container>
 			</Navbar>
 		);
