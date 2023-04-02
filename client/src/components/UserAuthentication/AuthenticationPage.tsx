@@ -1,5 +1,5 @@
 import { Button, Form } from "react-bootstrap";
-import React, { FormEventHandler } from "react";
+import React, { ChangeEvent, FormEvent } from "react";
 import { ClassNames } from "../AppStyles";
 import Header from "./Header";
 import InputField from "./InputField";
@@ -15,7 +15,7 @@ enum ElementIDs {
 /**
  * Properties used by this component.
  */
-interface IAuthenticationPageProps {
+export interface IAuthenticationPageProps {
 	pageTitle: string; // Title to display at the top of the page
 	submitButtonText: string; // Text for the form submit button
 }
@@ -23,18 +23,18 @@ interface IAuthenticationPageProps {
 /**
  * State properties used by this component.
  */
-interface IAuthenticationPageState {}
+export interface IAuthenticationPageState {
+	showFormValidation: boolean; // True if form validation is showning, false if it's hidden
+	emailValue: string; // User-entered email address
+}
 
 /**
  * User authentication page.
  */
-export default abstract class AuthenticationPage extends React.Component<
-	IAuthenticationPageProps,
-	IAuthenticationPageState
-> {
-	// Regular expression used for email validation
-	private emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
+export default abstract class AuthenticationPage<
+	props extends IAuthenticationPageProps,
+	state extends IAuthenticationPageState
+> extends React.Component<props, state> {
 	/**
 	 * Generate HTML content for the component.
 	 * @returns {JSX.Element} User authentication page.
@@ -44,15 +44,20 @@ export default abstract class AuthenticationPage extends React.Component<
 			<div>
 				<Header></Header>
 				<div className={[ClassNames.flex, ClassNames.center].join(" ")}>
-					<Form onSubmit={this.onFormSubmit}>
+					<Form
+						onSubmit={this.onFormSubmit}
+						noValidate
+						validated={this.state.showFormValidation}
+					>
 						<Form.Label>
 							<h1>{this.props.pageTitle}</h1>
 						</Form.Label>
 						<InputField
 							ID={ElementIDs.email}
+							type="email"
 							label={resx.userAuthentication.emailLabel}
-							validateInput={true}
-							validationRegex={this.emailRegex}
+							ghostText={resx.userAuthentication.emailGhostText}
+							onChange={this.onEmailChange}
 							invalidMessage={
 								resx.userAuthentication.invalidEmail
 							}
@@ -61,12 +66,14 @@ export default abstract class AuthenticationPage extends React.Component<
 						<Button variant="primary" type="submit">
 							{this.props.submitButtonText}
 						</Button>
-						{this.buildFormButtons()}
+						{this.buildFormLinks()}
 					</Form>
 				</div>
 			</div>
 		);
 	}
+
+	//#region JSX Helpers
 
 	/**
 	 * Creates elements to display in the authentication form.
@@ -78,10 +85,36 @@ export default abstract class AuthenticationPage extends React.Component<
 	 * Creates additional form buttons to show under the submit button.
 	 * @returns {JSX.Element} Additional buttons to display in the form.
 	 */
-	protected abstract buildFormButtons(): JSX.Element;
+	protected abstract buildFormLinks(): JSX.Element;
+
+	//#endregion
+
+	//#region Event handlers
 
 	/**
 	 * Called when the form on submit action is triggered.
+	 * @param {FormEvent<HTMLFormElement>} event Form submit event
 	 */
-	protected abstract onFormSubmit: FormEventHandler<HTMLFormElement>;
+	private onFormSubmit = (event: FormEvent<HTMLFormElement>): void => {
+		// Prevent page refresh that happens on submit
+		event.preventDefault();
+
+		// Show form validation - only applies if the submit fails
+		this.setState({
+			showFormValidation: true
+		});
+	};
+
+	/**
+	 * Called when the email input value changes.
+	 * @param {ChangeEvent<HTMLInputElement>} event Input change event.
+	 */
+	private onEmailChange = (event: ChangeEvent<HTMLInputElement>): void => {
+		this.setState({
+			showFormValidation: false, // Hide form validation when user starts typing
+			emailValue: event.target.value
+		});
+	};
+
+	//#endregion
 }

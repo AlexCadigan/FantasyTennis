@@ -1,6 +1,9 @@
+import AuthenticationPage, {
+	IAuthenticationPageProps,
+	IAuthenticationPageState
+} from "./AuthenticationPage";
 import { AppRoutes } from "../App";
-import AuthenticationPage from "./AuthenticationPage";
-import { FormEvent } from "react";
+import { ChangeEvent } from "react";
 import InputField from "./InputField";
 import { Link } from "react-router-dom";
 import { resx } from "client/src/Resources/Resources";
@@ -13,9 +16,39 @@ enum ElementIDs {
 }
 
 /**
+ * Properties used by this component.
+ */
+interface ISignInProps extends IAuthenticationPageProps {}
+
+/**
+ * State properties used by this component.
+ */
+interface ISignInState extends IAuthenticationPageState {
+	passwordValue: string; // User-entered password
+}
+
+/**
  * Sign in page for existing users.
  */
-export default class SignIn extends AuthenticationPage {
+export default class SignIn extends AuthenticationPage<
+	ISignInProps,
+	ISignInState
+> {
+	/**
+	 * Creates an instance of this component and initalizes state properties.
+	 * @param {ISignInProps} props Properties used by this component.
+	 */
+	public constructor(props: ISignInProps) {
+		super(props);
+
+		// Initialize state
+		this.state = {
+			showFormValidation: false,
+			emailValue: "",
+			passwordValue: ""
+		};
+	}
+
 	/**
 	 * Creates elements to display in the sign in form.
 	 * @returns {JSX.Element} Elements to display in the form.
@@ -24,16 +57,19 @@ export default class SignIn extends AuthenticationPage {
 		return (
 			<InputField
 				ID={ElementIDs.password}
+				type="password"
 				label={resx.userAuthentication.passwordLabel}
+				ghostText={resx.userAuthentication.passwordGhostText}
+				onChange={this.onPasswordChange}
 			></InputField>
 		);
 	}
 
 	/**
-	 * Creates additional sign in form buttons to show under the submit button.
-	 * @returns {JSX.Element} Additional buttons to display in the form.
+	 * Creates navigation links to show under the submit button.
+	 * @returns {JSX.Element} Navigation links to display in the form.
 	 */
-	protected buildFormButtons(): JSX.Element {
+	protected buildFormLinks(): JSX.Element {
 		return (
 			<div>
 				<Link to={AppRoutes.signUp}>
@@ -47,11 +83,12 @@ export default class SignIn extends AuthenticationPage {
 	}
 
 	/**
-	 * Called when the sign in form on submit action is triggered.
-	 * @param {FormEvent<HTMLFormElement>} event Form submit event.
+	 * Called when the password input value changes.
+	 * @param {ChangeEvent<HTMLInputElement>} event Input change event.
 	 */
-	protected onFormSubmit = (event: FormEvent<HTMLFormElement>): void => {
-		// Prevent page refresh that happens on submit
-		event.preventDefault();
+	private onPasswordChange = (event: ChangeEvent<HTMLInputElement>): void => {
+		this.setState({
+			passwordValue: event.target.value
+		});
 	};
 }

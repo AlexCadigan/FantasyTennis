@@ -1,5 +1,5 @@
 /**
- * CSS class names used by this app.
+ * Bootstrap CSS class names used by this app.
  */
 export enum ClassNames {
 	center = "justify-content-center", // Center horizontally

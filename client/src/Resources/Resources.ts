@@ -2,29 +2,30 @@
  * String resources used by the application.
  */
 export const resx = {
-	tabTitle: "Fantasy Tennis", // Title shown in the browser tab for the website
+	tabTitle: "Fantasy Tennis", // Title shown in the browser tab and header for the website
 	userAuthentication: {
 		emailGhostText: "Enter email", // Ghost text that appears in the email input
 		emailLabel: "Email address", // Label for email input
-		headerTitle: "Fantasy Tennis", // Title that appears in header before a user is logged in
 		invalidEmail: "Invalid email", // Warning that appears when an invalid email is entered
+		passwordGhostText: "Enter password", // Ghost text that appears in the password input
 		passwordLabel: "Password", // Label for password input
+		// Sign in page
 		signIn: {
-			// Sign in page
 			forgotPasswordLink: "Forgot password?", // Label for the forgot password link
 			signUpLink: "Create an account?", // Label for the link to navigate to the sign up page
 			submitButton: "Sign In", // Label for the sign in button
-			title: "Sign in to Fantasy Tennis" // Title that appears when user is signing in
+			title: "Sign In" // Title that appears when user is signing in
 		},
+		// Sign up page
 		signUp: {
-			// Sign up page
+			repeatPasswordGhostText: "Repeat password", // Ghost text that appears in the repeat password input
 			repeatPasswordLabel: "Repeat password", // Label for repeat password input
 			signInLink: "Already have an account?", // Label for the link to navigate to the sign in page
 			submitButton: "Create Account", // Label for the sign up button
 			title: "Create a Fantasy Tennis Account" // Title that appears when user is signing up
 		},
+		// Reset password page
 		resetPassword: {
-			// Reset password page
 			backToSignInLink: "Back to sign in?", // Label for the link to navigate to the sign in page
 			submitButton: "Send recovery email", // Label for the button to send a reset password email
 			title: "Reset your password" // Title for the reset password page
