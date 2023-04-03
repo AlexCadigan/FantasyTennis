@@ -22,7 +22,7 @@ export default class Header extends React.Component<{}, {}> {
 		return (
 			<Navbar className={ClassNames.header}>
 				<Container>
-					<Navbar.Brand>{resx.tabTitle}</Navbar.Brand>
+					<Navbar.Brand>{resx.websiteTitle}</Navbar.Brand>
 				</Container>
 			</Navbar>
 		);

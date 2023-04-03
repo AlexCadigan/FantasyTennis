@@ -2,7 +2,7 @@
  * String resources used by the application.
  */
 export const resx = {
-	tabTitle: "Fantasy Tennis", // Title shown in the browser tab and header for the website
+	websiteTitle: "Fantasy Tennis", // Title shown in the browser tab and header for the website
 	userAuthentication: {
 		emailGhostText: "Enter email", // Ghost text that appears in the email input
 		emailLabel: "Email address", // Label for email input

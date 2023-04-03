@@ -6,6 +6,9 @@ import { resx } from "../Resources/Resources";
 import SignIn from "./UserAuthentication/SignIn";
 import SignUp from "./UserAuthentication/SignUp";
 
+/**
+ * Navigation routes for the app.
+ */
 export enum AppRoutes {
 	resetPassword = "/resetPassword",
 	signIn = "/",
@@ -20,7 +23,7 @@ export default class App extends React.Component {
 	 * Called before this component is rendered.  Sets the document title.
 	 */
 	public override componentDidMount(): void {
-		document.title = resx.tabTitle;
+		document.title = resx.websiteTitle;
 	}
 
 	/**

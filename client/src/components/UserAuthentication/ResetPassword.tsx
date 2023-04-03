@@ -37,6 +37,8 @@ export default class ResetPassword extends AuthenticationPage<
 		};
 	}
 
+	//#region JSX Helpers
+
 	/**
 	 * Creates elements to display in the reset password form.  Not used by this component.
 	 * @returns {null} Null.
@@ -58,4 +60,6 @@ export default class ResetPassword extends AuthenticationPage<
 			</div>
 		);
 	}
+
+	//#endregion
 }

@@ -17,8 +17,6 @@ interface ISignInState extends ISignInOrUpState {}
  * Sign in page for existing users.
  */
 export default class SignIn extends SignInOrUp<ISignInProps, ISignInState> {
-	//#region Constructor
-
 	/**
 	 * Creates an instance of this component and initalizes state properties.
 	 * @param {ISignInProps} props Properties used by this component.
@@ -33,8 +31,6 @@ export default class SignIn extends SignInOrUp<ISignInProps, ISignInState> {
 			passwordValue: ""
 		};
 	}
-
-	//#endregion
 
 	//#region JSX Helpers
 

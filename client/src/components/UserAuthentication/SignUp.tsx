@@ -28,8 +28,6 @@ interface ISignUpState extends ISignInOrUpState {
  * Sign up page for new users.
  */
 export default class SignUp extends SignInOrUp<ISignUpProps, ISignUpState> {
-	//#region Constructor
-
 	/**
 	 * Creates an instance of this component and initalizes state properties.
 	 * @param {ISignUpProps} props Properties used by this component.
@@ -45,8 +43,6 @@ export default class SignUp extends SignInOrUp<ISignUpProps, ISignUpState> {
 			repeatPasswordValue: ""
 		};
 	}
-
-	//#endregion
 
 	//#region JSX Helpers
 
@@ -84,8 +80,6 @@ export default class SignUp extends SignInOrUp<ISignUpProps, ISignUpState> {
 
 	//#endregion
 
-	//#region Event handlers
-
 	/**
 	 * Called when the repeat password input value changes.
 	 * @param {ChangeEvent<HTMLInputElement>} event Input change event.
@@ -97,6 +91,4 @@ export default class SignUp extends SignInOrUp<ISignUpProps, ISignUpState> {
 			repeatPasswordValue: event.target.value
 		});
 	};
-
-	//#endregion
 }
