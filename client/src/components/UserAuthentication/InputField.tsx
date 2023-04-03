@@ -14,17 +14,9 @@ interface IInputFieldProps {
 }
 
 /**
- * State properties used by this component.
- */
-interface IInputFieldState {}
-
-/**
  * Represents a field for user input.
  */
-export default class InputField extends React.Component<
-	IInputFieldProps,
-	IInputFieldState
-> {
+export default class InputField extends React.Component<IInputFieldProps, {}> {
 	/**
 	 * Generate HTML content for the component.
 	 * @returns {JSX.Element} JSX element representing an input field.

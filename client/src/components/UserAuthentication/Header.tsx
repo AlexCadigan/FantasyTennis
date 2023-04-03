@@ -11,22 +11,9 @@ enum ClassNames {
 }
 
 /**
- * Properties used by this component.
- */
-interface IHeaderProps {}
-
-/**
- * State properties used by this component.
- */
-interface IHeaderState {}
-
-/**
  * Website header that appears before users have signed in.
  */
-export default class Header extends React.Component<
-	IHeaderProps,
-	IHeaderState
-> {
+export default class Header extends React.Component<{}, {}> {
 	/**
 	 * Generate HTML content for the component.
 	 * @returns {JSX.Element} User authentication page.
