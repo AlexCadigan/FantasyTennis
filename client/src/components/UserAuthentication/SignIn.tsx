@@ -1,39 +1,24 @@
-import AuthenticationPage, {
-	IAuthenticationPageProps,
-	IAuthenticationPageState
-} from "./AuthenticationPage";
+import SignInOrUp, { ISignInOrUpProps, ISignInOrUpState } from "./SignInOrUp";
 import { AppRoutes } from "../App";
-import { ChangeEvent } from "react";
-import InputField from "./InputField";
 import { Link } from "react-router-dom";
 import { resx } from "client/src/Resources/Resources";
 
 /**
- * HTML element IDs used by this component.
- */
-enum ElementIDs {
-	password = "passwordInput"
-}
-
-/**
  * Properties used by this component.
  */
-interface ISignInProps extends IAuthenticationPageProps {}
+interface ISignInProps extends ISignInOrUpProps {}
 
 /**
  * State properties used by this component.
  */
-interface ISignInState extends IAuthenticationPageState {
-	passwordValue: string; // User-entered password
-}
+interface ISignInState extends ISignInOrUpState {}
 
 /**
  * Sign in page for existing users.
  */
-export default class SignIn extends AuthenticationPage<
-	ISignInProps,
-	ISignInState
-> {
+export default class SignIn extends SignInOrUp<ISignInProps, ISignInState> {
+	//#region Constructor
+
 	/**
 	 * Creates an instance of this component and initalizes state properties.
 	 * @param {ISignInProps} props Properties used by this component.
@@ -49,20 +34,16 @@ export default class SignIn extends AuthenticationPage<
 		};
 	}
 
+	//#endregion
+
+	//#region JSX Helpers
+
 	/**
-	 * Creates elements to display in the sign in form.
-	 * @returns {JSX.Element} Elements to display in the form.
+	 * Creates additional elements to display in the sign in form.  Unused.
+	 * @returns {JSX.Element | null} Null.
 	 */
-	protected buildFormElements(): JSX.Element {
-		return (
-			<InputField
-				ID={ElementIDs.password}
-				type="password"
-				label={resx.userAuthentication.passwordLabel}
-				ghostText={resx.userAuthentication.passwordGhostText}
-				onChange={this.onPasswordChange}
-			></InputField>
-		);
+	protected buildAdditionalFormElements(): JSX.Element | null {
+		return null;
 	}
 
 	/**
@@ -82,13 +63,5 @@ export default class SignIn extends AuthenticationPage<
 		);
 	}
 
-	/**
-	 * Called when the password input value changes.
-	 * @param {ChangeEvent<HTMLInputElement>} event Input change event.
-	 */
-	private onPasswordChange = (event: ChangeEvent<HTMLInputElement>): void => {
-		this.setState({
-			passwordValue: event.target.value
-		});
-	};
+	//#endregion
 }

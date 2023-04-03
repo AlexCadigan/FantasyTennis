@@ -1,7 +1,4 @@
-import AuthenticationPage, {
-	IAuthenticationPageProps,
-	IAuthenticationPageState
-} from "./AuthenticationPage";
+import SignInOrUp, { ISignInOrUpProps, ISignInOrUpState } from "./SignInOrUp";
 import { AppRoutes } from "../App";
 import { ChangeEvent } from "react";
 import InputField from "./InputField";
@@ -12,30 +9,27 @@ import { resx } from "client/src/Resources/Resources";
  * HTML element IDs used by this component.
  */
 enum ElementIDs {
-	password = "passwordInput",
 	repeatPassword = "repeatPasswordInput"
 }
 
 /**
  * Properties used by this component.
  */
-interface ISignUpProps extends IAuthenticationPageProps {}
+interface ISignUpProps extends ISignInOrUpProps {}
 
 /**
  * State properties used by this component.
  */
-interface ISignUpState extends IAuthenticationPageState {
-	passwordValue: string; // User-entered password
+interface ISignUpState extends ISignInOrUpState {
 	repeatPasswordValue: string; // User-entered repeated password
 }
 
 /**
  * Sign up page for new users.
  */
-export default class SignUp extends AuthenticationPage<
-	ISignUpProps,
-	ISignUpState
-> {
+export default class SignUp extends SignInOrUp<ISignUpProps, ISignUpState> {
+	//#region Constructor
+
 	/**
 	 * Creates an instance of this component and initalizes state properties.
 	 * @param {ISignUpProps} props Properties used by this component.
@@ -52,30 +46,25 @@ export default class SignUp extends AuthenticationPage<
 		};
 	}
 
+	//#endregion
+
+	//#region JSX Helpers
+
 	/**
 	 * Creates elements to display in the sign up form.
 	 * @returns {JSX.Element} Elements to display in the form.
 	 */
-	protected buildFormElements(): JSX.Element {
+	protected buildAdditionalFormElements(): JSX.Element {
 		return (
-			<div>
-				<InputField
-					ID={ElementIDs.password}
-					type="password"
-					label={resx.userAuthentication.passwordLabel}
-					ghostText={resx.userAuthentication.passwordGhostText}
-					onChange={this.onPasswordChange}
-				></InputField>
-				<InputField
-					ID={ElementIDs.repeatPassword}
-					type="password"
-					label={resx.userAuthentication.signUp.repeatPasswordLabel}
-					ghostText={
-						resx.userAuthentication.signUp.repeatPasswordGhostText
-					}
-					onChange={this.onRepeatPasswordChange}
-				></InputField>
-			</div>
+			<InputField
+				ID={ElementIDs.repeatPassword}
+				type="password"
+				label={resx.userAuthentication.signUp.repeatPasswordLabel}
+				ghostText={
+					resx.userAuthentication.signUp.repeatPasswordGhostText
+				}
+				onChange={this.onRepeatPasswordChange}
+			></InputField>
 		);
 	}
 
@@ -93,17 +82,9 @@ export default class SignUp extends AuthenticationPage<
 		);
 	}
 
-	//#region Event handlers
+	//#endregion
 
-	/**
-	 * Called when the password input value changes.
-	 * @param {ChangeEvent<HTMLInputElement>} event Input change event.
-	 */
-	private onPasswordChange = (event: ChangeEvent<HTMLInputElement>): void => {
-		this.setState({
-			passwordValue: event.target.value
-		});
-	};
+	//#region Event handlers
 
 	/**
 	 * Called when the repeat password input value changes.
