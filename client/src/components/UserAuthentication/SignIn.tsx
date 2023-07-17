@@ -1,63 +1,62 @@
-import SignInOrUp, { ISignInOrUpProps, ISignInOrUpState } from "./SignInOrUp";
-import { AppRoutes } from "../App";
+import { Button, Form } from "react-bootstrap";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { resx } from "client/src/Resources/Resources";
 
-/**
- * Properties used by this component.
- */
-interface ISignInProps extends ISignInOrUpProps {}
+const SignInComponent: React.FC = () => {
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
 
-/**
- * State properties used by this component.
- */
-interface ISignInState extends ISignInOrUpState {}
+	const handleEmailChange = (
+		e: React.ChangeEvent<HTMLInputElement>
+	): void => {
+		setEmail(e.target.value);
+	};
 
-/**
- * Sign in page for existing users.
- */
-export default class SignIn extends SignInOrUp<ISignInProps, ISignInState> {
-	/**
-	 * Creates an instance of this component and initalizes state properties.
-	 * @param {ISignInProps} props Properties used by this component.
-	 */
-	public constructor(props: ISignInProps) {
-		super(props);
+	const handlePasswordChange = (
+		e: React.ChangeEvent<HTMLInputElement>
+	): void => {
+		setPassword(e.target.value);
+	};
 
-		// Initialize state
-		this.state = {
-			showFormValidation: false,
-			emailValue: "",
-			passwordValue: ""
-		};
-	}
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+		e.preventDefault();
+		// Add your sign-in logic here
+	};
 
-	//#region JSX Helpers
+	return (
+		<Form onSubmit={handleSubmit}>
+			<Form.Group controlId="formEmail">
+				<Form.Label>Email address</Form.Label>
+				<Form.Control
+					type="email"
+					placeholder="Enter email"
+					value={email}
+					onChange={handleEmailChange}
+				/>
+			</Form.Group>
 
-	/**
-	 * Creates additional elements to display in the sign in form.  Unused.
-	 * @returns {JSX.Element | null} Null.
-	 */
-	protected buildAdditionalFormElements(): JSX.Element | null {
-		return null;
-	}
+			<Form.Group controlId="formPassword">
+				<Form.Label>Password</Form.Label>
+				<Form.Control
+					type="password"
+					placeholder="Password"
+					value={password}
+					onChange={handlePasswordChange}
+				/>
+			</Form.Group>
 
-	/**
-	 * Creates navigation links to show under the submit button.
-	 * @returns {JSX.Element} Navigation links to display in the form.
-	 */
-	protected buildFormLinks(): JSX.Element {
-		return (
-			<div>
-				<Link to={AppRoutes.signUp}>
-					{resx.userAuthentication.signIn.signUpLink}
-				</Link>
-				<Link to={AppRoutes.resetPassword}>
-					{resx.userAuthentication.signIn.forgotPasswordLink}
-				</Link>
-			</div>
-		);
-	}
+			<Button variant="primary" type="submit">
+				Sign In
+			</Button>
 
-	//#endregion
-}
+			<Form.Group controlId="formSignUpLink">
+				<Form.Text>
+					Don&apos;t have an account?{" "}
+					<Link to="/signup">Sign Up</Link>
+				</Form.Text>
+			</Form.Group>
+		</Form>
+	);
+};
+
+export default SignInComponent;

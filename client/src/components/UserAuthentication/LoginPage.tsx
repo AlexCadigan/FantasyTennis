@@ -1,191 +1,38 @@
-// import { APIs, buildRequestParams } from "client/src/util/APIs";
-import React from "react";
-// import InputField from "./InputField";
-// import { resx } from "../../Resources/Resources";
+// import React from "react";
+// import { Container, Form, Button } from "react-bootstrap";
 
-/**
- * HTML element IDs used by this component.
- */
-// enum ElementIDs {
-// 	email = "emailInput",
-// 	password = "passwordInput"
-// }
+// const App: React.FC = () => {
+// 	const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
+// 		event.preventDefault();
+// 		// Handle login logic here
+// 	};
 
-/**
- * CSS class names used by this component.
- */
-// enum ClassNames {
-// 	signInPage = "authenticationPage"
-// }
+// 	return (
+// 		<Container>
+// 			<h1>Login Page</h1>
+// 			<Form onSubmit={handleLogin}>
+// 				<Form.Group controlId="formUsername">
+// 					<Form.Label>Username</Form.Label>
+// 					<Form.Control
+// 						type="text"
+// 						placeholder="Enter your username"
+// 					/>
+// 				</Form.Group>
 
-/**
- * Properties used by this component.
- */
-interface IProps {}
+// 				<Form.Group controlId="formPassword">
+// 					<Form.Label>Password</Form.Label>
+// 					<Form.Control
+// 						type="password"
+// 						placeholder="Enter your password"
+// 					/>
+// 				</Form.Group>
 
-/**
- * State properties used by this component.
- */
-interface IState {
-	passwordValue: string; // User-entered password
-	repeatPasswordValue: string; // Repeat password entered by user
-	signIn: boolean; // True if in sign in mode, false if in sign up mode
-}
+// 				<Button variant="primary" type="submit">
+// 					Login
+// 				</Button>
+// 			</Form>
+// 		</Container>
+// 	);
+// };
 
-/**
- * User login page.  Handles existing users signing up or new users registering.
- */
-export default class LoginPage extends React.Component<IProps, IState> {
-	// private emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-	/**
-	 * Creates an instance of this component and initalizes state properties.
-	 * @param {IProps} props Properties used by this component.
-	 */
-	// public constructor(props: IProps) {
-	// 	super(props);
-	// 	// Initialize state
-	// 	this.state = {
-	// 		passwordValue: "",
-	// 		repeatPasswordValue: "",
-	// 		signIn: true
-	// 	};
-	// }
-	/**
-	 * Generate HTML content for the component.
-	 * @returns {JSX.Element} JSX element representing the login page.
-	 */
-	// public override render(): JSX.Element {
-	// 	return (
-	// 		<div className={ClassNames.signInPage}>
-	// 			<p>
-	// 				{this.state.signIn
-	// 					? resx.login.signInTitle
-	// 					: resx.login.signUpTitle}
-	// 			</p>
-	// 			<form
-	// 				className={ClassNames.flexColumn}
-	// 				onSubmit={this.onSubmitLogin}
-	// 			>
-	// 				<InputField
-	// 					ID={ElementIDs.email}
-	// 					label={resx.login.emailLabel}
-	// 					validateInput={true}
-	// 					validationRegex={this.emailRegex}
-	// 					invalidMessage={resx.login.invalidEmail}
-	// 				></InputField>
-	// 				<InputField
-	// 					ID={ElementIDs.password}
-	// 					label={resx.login.passwordLabel}
-	// 				></InputField>
-	// 				{this.createTextField(
-	// 					ElementIDs.repeatPassword,
-	// 					resx.login.repeatPasswordLabel,
-	// 					this.onRepeatPasswordChange,
-	// 					this.state.signIn
-	// 				)}
-	// 				<input
-	// 					type="submit"
-	// 					value={
-	// 						this.state.signIn
-	// 							? resx.login.signInButton
-	// 							: resx.login.signUpButton
-	// 					}
-	// 				></input>
-	// 				<div>
-	// 					<button onClick={this.onToggleSignIn}>
-	// 						{resx.login.signUpLink}
-	// 					</button>
-	// 					<button>{resx.login.forgotPasswordLink}</button>
-	// 				</div>
-	// 			</form>
-	// 		</div>
-	// 	);
-	// }
-	//#region JXS helpers
-	/**
-	 * Creates a text field comprised of a label/input pair.
-	 * @param {string} elementID Input element ID.
-	 * @param {string} label Text to show for field label.
-	 * @param {ChangeEventHandler<HTMLInputElement>} onChange Function called when input element text changes.
-	 * @param {boolean} hidden True if the field should be hidden, false if it should be shown (default is false).
-	 * @param {FocusEventHandler<HTMLInputElement>} onBlur Function called when focus leaves the input element.
-	 * @returns {JSX.Element} Text field comprised of label/input pair.
-	 */
-	// private createTextField(
-	// 	elementID: string,
-	// 	label: string,
-	// 	onChange: ChangeEventHandler<HTMLInputElement>,
-	// 	hidden = false,
-	// 	onBlur?: FocusEventHandler<HTMLInputElement>
-	// ): JSX.Element {
-	// 	return (
-	// 		<div className={ClassNames.flexColumn}>
-	// 			<label
-	// 				className={hidden ? ClassNames.noDisp : ""}
-	// 				htmlFor={elementID}
-	// 			>
-	// 				{label}
-	// 			</label>
-	// 			<input
-	// 				id={elementID}
-	// 				className={hidden ? ClassNames.noDisp : ""}
-	// 				type="text"
-	// 				onBlur={onBlur}
-	// 				onChange={onChange}
-	// 			></input>
-	// 		</div>
-	// 	);
-	// }
-	//#endregion
-	//#region On change handlers
-	// private onElementBlur = (): void => {
-	// 	const test = "test";
-	// 	if (test) {
-	// 		console.log("test");
-	// 	}
-	// };
-	/**
-	 * Called when the repeat password input field changes.
-	 * @param {ChangeEvent<HTMLInputElement>} event Input change event.
-	 */
-	// private onRepeatPasswordChange = (
-	// 	event: ChangeEvent<HTMLInputElement>
-	// ): void => {
-	// 	this.setState({
-	// 		repeatPasswordValue: event.target.value
-	// 	});
-	// };
-	//#endregion
-	//#region Button handlers
-	/**
-	 * Switches between sign in mode, for existing users, and sign up mode, for new users.
-	 */
-	// private onToggleSignIn = (): void => {
-	// 	this.setState({
-	// 		signIn: !this.state.signIn
-	// 	});
-	// };
-	/**
-	 * Called when the login form submits.  Signs in / signs up a user.
-	 * @param {FormEvent<HTMLFormElement>} event Form submit event.
-	 */
-	// private onSubmitLogin = (event: FormEvent<HTMLFormElement>): void => {
-	// 	// Prevent page refresh that happens on submit
-	// 	event.preventDefault();
-	// 	let req: string;
-	// 	const reqParams = new URLSearchParams({
-	// 		password: this.state.passwordValue
-	// 	});
-	// 	// Build request based on what state the page is in
-	// 	if (this.state.signIn) {
-	// 		req = APIs.signIn;
-	// 	} else {
-	// 		req = APIs.signUp;
-	// 		reqParams.append("repeatPassword", this.state.repeatPasswordValue);
-	// 	}
-	// 	fetch(buildRequestParams(req, reqParams)).then((response) =>
-	// 		response.json()
-	// 	);
-	// };
-	//#endregion
-}
+// export default App;
