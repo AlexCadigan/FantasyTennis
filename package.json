@@ -24,6 +24,7 @@
 		"tests"
 	],
 	"scripts": {
+		"build": "cd server && npm run prestart",
 		"start": "concurrently --kill-others \"npm run startServer\" \"npm run startClient\"",
 		"startServer": "npx nodemon",
 		"startClient": "npm run start --prefix client",
