@@ -24,10 +24,12 @@
 		"tests"
 	],
 	"scripts": {
-		"build": "cd server && npm run prestart",
-		"start": "concurrently --kill-others \"npm run startServer\" \"npm run startClient\"",
-		"startServer": "npx nodemon",
-		"startClient": "npm run start --prefix client",
+		"build": "npm run build --prefix client",
+		"start": "npm run start --prefix client",
+		"prestart": "npm run build",
+		"start:dev": "concurrently --kill-others \"npm run startServer:dev\" \"npm run startClient:dev\"",
+		"startServer:dev": "npx nodemon",
+		"startClient:dev": "npm run start --prefix client",
 		"lint": "npm run prettier && npm run eslint",
 		"prettier": "npx prettier --write .",
 		"eslint": "npx eslint .",
