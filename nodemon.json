@@ -1,6 +1,6 @@
 {
 	"exec": "npm run start --prefix server",
-	"ext": "json,pug,ts,tsx",
+	"ext": "pug,ts,tsx",
 	"ignore": [
 		"**/node_modules",
 		"dist",
