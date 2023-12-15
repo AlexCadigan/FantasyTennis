@@ -8,5 +8,6 @@ build
 # Testing
 coverage
 
-# VS Code
-.vscode
+# Amplify
+amplify/backend/types/amplify-dependent-resources-ref.d.ts
+src/ui-components/studioTheme.js.d.ts
