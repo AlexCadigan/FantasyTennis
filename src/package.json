@@ -1,5 +1,5 @@
 {
-	"name": "client",
+	"name": "src",
 	"version": "1.0.0",
 	"author": "Alex Cadigan",
 	"description": "Client code for the Fantay Tennis app.",

@@ -19,13 +19,13 @@
 		"url": "https://github.com/AlexCadigan/FantasyTennis/issues"
 	},
 	"workspaces": [
-		"client",
 		"server",
+		"src",
 		"tests"
 	],
 	"scripts": {
-		"build": "npm run build --prefix client",
-		"start": "npm run start --prefix client",
+		"build": "npm run build --prefix src",
+		"start": "npm run start --prefix src",
 		"prestart": "npm run build",
 		"start:dev": "concurrently --kill-others \"npm run startServer:dev\" \"npm run startClient:dev\"",
 		"startServer:dev": "npx nodemon",

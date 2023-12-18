@@ -8,7 +8,7 @@ frontend:
             commands:
                 - "npm run build"
     artifacts:
-        baseDirectory: client/build
+        baseDirectory: src/build
         files:
             - "**/*"
     cache:
