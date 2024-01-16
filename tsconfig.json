@@ -23,6 +23,9 @@
 		"outDir": "dist",
 		"sourceMap": true,
 
+		// JavaScript Support
+		"allowJs": true,
+
 		// Interop Constraints
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,

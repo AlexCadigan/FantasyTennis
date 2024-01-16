@@ -1,4 +1,0 @@
-{
-	"collectCoverage": false,
-	"projects": ["<rootDir>/client", "<rootDir>/server"]
-}

@@ -9,6 +9,5 @@ build
 coverage
 
 # Amplify
-amplify/backend/types/amplify-dependent-resources-ref.d.ts
-client/src/ui-components/studioTheme.js.d.ts
-src/ui-components/studioTheme.js.d.ts
+amplify-dependent-resources-ref.d.ts
+studioTheme.js.d.ts
