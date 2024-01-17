@@ -9,7 +9,7 @@
 		"Tennis"
 	],
 	"license": "MIT",
-	"browser": "index.js",
+	"homepage": ".",
 	"browserslist": {
 		"production": [
 			">0.2%",
@@ -26,7 +26,6 @@
 		"type": "git",
 		"url": "git+https://github.com/AlexCadigan/FantasyTennis.git"
 	},
-	"homepage": "https://github.com/AlexCadigan/FantasyTennis#readme",
 	"bugs": {
 		"url": "https://github.com/AlexCadigan/FantasyTennis/issues"
 	},
