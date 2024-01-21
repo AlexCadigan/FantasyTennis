@@ -3,8 +3,7 @@
 		"browser": true,
 		"node": true,
 		"commonjs": true,
-		"es2022": true,
-		"jest": true
+		"es2022": true
 	},
 	"extends": [
 		"eslint:recommended",
@@ -36,41 +35,13 @@
 		"NodeJS": true
 	},
 	"rules": {
-		// ESLint
-		"no-fallthrough": [
-			"error",
-			{
-				"commentPattern": "break\\sunecessary"
-			}
-		],
-		"sort-imports": [
-			"error",
-			{
-				"ignoreCase": true
-			}
-		],
-
 		// Typescript
 		"@typescript-eslint/explicit-function-return-type": "error",
-		"no-unused-vars": "off",
-		"@typescript-eslint/no-unused-vars": [
-			"error",
-			{
-				"argsIgnorePattern": "^_"
-			}
-		],
 
 		// React
 		"react/react-in-jsx-scope": "off", // Not needed in current React versions
 
 		// JSDoc
 		"jsdoc/newline-after-description": ["error", "never"]
-	},
-	"overrides": [
-		{
-			"files": ["**/tests/**"],
-			"plugins": ["jest"],
-			"extends": ["plugin:jest/recommended"]
-		}
-	]
+	}
 }

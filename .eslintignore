@@ -2,12 +2,7 @@
 node_modules
 
 # Production
-dist
 build
-
-# Testing
-coverage
 
 # Amplify
 amplify-dependent-resources-ref.d.ts
-studioTheme.js.d.ts

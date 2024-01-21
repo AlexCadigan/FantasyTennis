@@ -13,7 +13,6 @@ Amplify.configure(awsconfig);
 export default function App(): JSX.Element {
 	return (
 		<ThemeProvider theme={studioTheme}>
-			<div>TODO: add app content.</div>
 			<NavBarHeader2></NavBarHeader2>
 		</ThemeProvider>
 	);

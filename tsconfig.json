@@ -36,6 +36,5 @@
 
 		// Projects
 		"composite": true
-	},
-	"exclude": ["dist", "tests"]
+	}
 }

@@ -1,9 +1,3 @@
-# Testing
-coverage
-
-# Miscellaneous
-*.docx
-
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
 amplify/.config/local-*
@@ -25,3 +19,9 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
+
+# Amplify cloud configuration
+amplify/team-provider-info.json
+
+# Miscellaneous
+*.docx
