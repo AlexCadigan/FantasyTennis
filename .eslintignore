@@ -3,6 +3,3 @@ node_modules
 
 # Production
 build
-
-# Amplify
-amplify-dependent-resources-ref.d.ts

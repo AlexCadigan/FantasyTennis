@@ -5,4 +5,6 @@
  **************************************************************************/
 
 export { default as NavBarHeader2 } from "./NavBarHeader2";
+export { default as TournamentsCreateForm } from "./TournamentsCreateForm";
+export { default as TournamentsUpdateForm } from "./TournamentsUpdateForm";
 export { default as studioTheme } from "./studioTheme";

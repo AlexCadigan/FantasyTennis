@@ -1,0 +1,8 @@
+type Tournaments @model @auth(rules: [{ allow: public }]) {
+	id: ID!
+	Name: String!
+	AtpID: Int
+	StartDate: AWSDate
+	EndDate: AWSDate
+	Location: String
+}
