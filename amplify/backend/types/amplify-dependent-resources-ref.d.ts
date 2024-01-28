@@ -6,4 +6,15 @@ export type AmplifyDependentResourcesAttributes = {
 			GraphQLAPIKeyOutput: "string";
 		};
 	};
+	auth: {
+		FantasyTennis: {
+			AppClientID: "string";
+			AppClientIDWeb: "string";
+			IdentityPoolId: "string";
+			IdentityPoolName: "string";
+			UserPoolArn: "string";
+			UserPoolId: "string";
+			UserPoolName: "string";
+		};
+	};
 };
