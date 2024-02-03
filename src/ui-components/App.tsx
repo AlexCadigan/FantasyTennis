@@ -1,5 +1,5 @@
 import "@aws-amplify/ui-react/styles.css";
-import { NavBarHeader2, studioTheme } from "./";
+import { Homepage, studioTheme } from "./";
 import { Amplify } from "aws-amplify";
 import awsconfig from "../aws-exports";
 import {
@@ -12,17 +12,15 @@ Amplify.configure(awsconfig);
 
 /**
  * Generate HTML content for the top-level application component.
- * @param root0
- * @param root0.signOut
- * @param root0.user
+ * @param {WithAuthenticatorProps} props Props from the Authenticator wrapper used by the app.
  * @returns {JSX.Element} JSX element representing the application.
  */
-export function App({ signOut, user }: WithAuthenticatorProps): JSX.Element {
+export function App(props: WithAuthenticatorProps): JSX.Element {
 	return (
 		<ThemeProvider theme={studioTheme}>
-			<NavBarHeader2></NavBarHeader2>
-			<h1>Hello {user?.username}</h1>
-			<button onClick={signOut}>Sign out</button>
+			<Homepage></Homepage>
+			<h1>Hello {props.user?.username}</h1>
+			<button onClick={props.signOut}>Sign out</button>
 		</ThemeProvider>
 	);
 }
